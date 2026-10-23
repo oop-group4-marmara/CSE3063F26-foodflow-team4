@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="edu.marmara.cse3063.foodflow.SmokeTest" time="0.041" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="edu.marmara.cse3063.foodflow.SmokeTest" time="0.027" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="TR"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-21.0.12.101-hotspot\bin"/>
-    <property name="sun.java.command" value="C:\Users\Cihangir\AppData\Local\Temp\surefire15910905821975512258\surefirebooter-20261023215359506_3.jar C:\Users\Cihangir\AppData\Local\Temp\surefire15910905821975512258 2026-10-23T21-53-59_389-jvmRun1 surefire-20261023215359506_1tmp surefire_0-20261023215359506_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\Cihangir\AppData\Local\Temp\surefire7026387444092565138\surefirebooter-20261023221031713_3.jar C:\Users\Cihangir\AppData\Local\Temp\surefire7026387444092565138 2026-10-23T22-10-31_632-jvmRun1 surefire-20261023221031713_1tmp surefire_0-20261023221031713_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\Cihangir\Desktop\Yazılım\CSE3063F26-foodflow-team4\target\test-classes;C:\Users\Cihangir\Desktop\Yazılım\CSE3063F26-foodflow-team4\target\classes;C:\Users\Cihangir\.m2\repository\com\google\code\gson\gson\2.13.1\gson-2.13.1.jar;C:\Users\Cihangir\.m2\repository\com\google\errorprone\error_prone_annotations\2.38.0\error_prone_annotations-2.38.0.jar;C:\Users\Cihangir\.m2\repository\org\junit\jupiter\junit-jupiter\6.0.3\junit-jupiter-6.0.3.jar;C:\Users\Cihangir\.m2\repository\org\junit\jupiter\junit-jupiter-api\6.0.3\junit-jupiter-api-6.0.3.jar;C:\Users\Cihangir\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Cihangir\.m2\repository\org\junit\platform\junit-platform-commons\6.0.3\junit-platform-commons-6.0.3.jar;C:\Users\Cihangir\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Cihangir\.m2\repository\org\jspecify\jspecify\1.0.0\jspecify-1.0.0.jar;C:\Users\Cihangir\.m2\repository\org\junit\jupiter\junit-jupiter-params\6.0.3\junit-jupiter-params-6.0.3.jar;C:\Users\Cihangir\.m2\repository\org\junit\jupiter\junit-jupiter-engine\6.0.3\junit-jupiter-engine-6.0.3.jar;C:\Users\Cihangir\.m2\repository\org\junit\platform\junit-platform-engine\6.0.3\junit-platform-engine-6.0.3.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Cihangir\AppData\Local\Temp\surefire15910905821975512258\surefirebooter-20261023215359506_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Cihangir\AppData\Local\Temp\surefire7026387444092565138\surefirebooter-20261023221031713_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.12.1+1-LTS"/>
@@ -45,6 +45,7 @@
     <property name="localRepository" value="C:\Users\Cihangir\.m2\repository"/>
     <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
     <property name="java.io.tmpdir" value="C:\Users\Cihangir\AppData\Local\Temp\"/>
+    <property name="idea.version" value="2024.3.2.1"/>
     <property name="java.version" value="21.0.12.1"/>
     <property name="user.dir" value="C:\Users\Cihangir\Desktop\Yazılım\CSE3063F26-foodflow-team4"/>
     <property name="os.arch" value="amd64"/>
@@ -59,5 +60,5 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="arithmeticStillWorks" classname="edu.marmara.cse3063.foodflow.SmokeTest" time="0.023"/>
+  <testcase name="arithmeticStillWorks" classname="edu.marmara.cse3063.foodflow.SmokeTest" time="0.014"/>
 </testsuite>
