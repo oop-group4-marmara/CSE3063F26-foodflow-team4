@@ -1,0 +1,19 @@
+@startuml
+' Iteration 1 domain model (conceptual: concepts, attributes, associations; no methods)
+hide circle
+hide empty methods
+skinparam classAttributeIconSize 0
+
+class .... {
+  name
+  ....
+  city
+  ilçe
+}
+class ... {
+  name
+  price
+}
+' TODO: add Customer, Cart, CartLine, Order, OrderLine, ...
+Restaurant "1" -- "1..*" MenuItem : offers >
+@enduml

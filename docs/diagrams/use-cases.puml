@@ -1,0 +1,13 @@
+@startuml
+left to right direction
+actor Customer
+actor "Restaurant Owner" as Owner
+actor Courier
+rectangle FoodFlow {
+  usecase "Browse restaurants" as UC1
+  usecase "Place order" as UC2
+  ' TODO: complete for the whole product; mark Iteration 1 use cases
+}
+Customer --> UC1
+Customer --> UC2
+@enduml
