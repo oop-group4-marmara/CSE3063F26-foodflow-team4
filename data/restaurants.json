@@ -1,0 +1,274 @@
+{
+  "restaurants": [
+    {
+      "id": "R01",
+      "name": "Kebapçı Mehmet",
+      "cuisine": "Turkish",
+      "district": "Kadıköy",
+      "deliveryFee": 25.0,
+      "minimumBasket": 150.0,
+      "menu": [
+        {
+          "id": "R01-01",
+          "name": "Lahmacun",
+          "category": "Main",
+          "price": 140.0
+        },
+        {
+          "id": "R01-02",
+          "name": "Adana Kebap",
+          "category": "Main",
+          "price": 320.0
+        },
+        {
+          "id": "R01-03",
+          "name": "İskender",
+          "category": "Main",
+          "price": 360.0
+        },
+        {
+          "id": "R01-04",
+          "name": "Mercimek Çorbası",
+          "category": "Soup",
+          "price": 90.0
+        },
+        {
+          "id": "R01-05",
+          "name": "Ayran",
+          "category": "Drink",
+          "price": 40.0
+        },
+        {
+          "id": "R01-06",
+          "name": "Şalgam",
+          "category": "Drink",
+          "price": 45.0
+        },
+        {
+          "id": "R01-07",
+          "name": "Künefe",
+          "category": "Dessert",
+          "price": 180.0
+        }
+      ]
+    },
+    {
+      "id": "R02",
+      "name": "Pizza Roma",
+      "cuisine": "Italian",
+      "district": "Beşiktaş",
+      "deliveryFee": 40.0,
+      "minimumBasket": 250.0,
+      "menu": [
+        {
+          "id": "R02-01",
+          "name": "Margherita",
+          "category": "Pizza",
+          "price": 320.0
+        },
+        {
+          "id": "R02-02",
+          "name": "Quattro Formaggi",
+          "category": "Pizza",
+          "price": 390.0
+        },
+        {
+          "id": "R02-03",
+          "name": "Pepperoni",
+          "category": "Pizza",
+          "price": 370.0
+        },
+        {
+          "id": "R02-04",
+          "name": "Caesar Salad",
+          "category": "Salad",
+          "price": 210.0
+        },
+        {
+          "id": "R02-05",
+          "name": "Tiramisu",
+          "category": "Dessert",
+          "price": 190.0
+        },
+        {
+          "id": "R02-06",
+          "name": "Lemonade",
+          "category": "Drink",
+          "price": 60.0
+        }
+      ]
+    },
+    {
+      "id": "R03",
+      "name": "Burger Station",
+      "cuisine": "American",
+      "district": "Şişli",
+      "deliveryFee": 35.0,
+      "minimumBasket": 200.0,
+      "menu": [
+        {
+          "id": "R03-01",
+          "name": "Classic Burger",
+          "category": "Burger",
+          "price": 290.0
+        },
+        {
+          "id": "R03-02",
+          "name": "Cheeseburger",
+          "category": "Burger",
+          "price": 310.0
+        },
+        {
+          "id": "R03-03",
+          "name": "Chicken Burger",
+          "category": "Burger",
+          "price": 270.0
+        },
+        {
+          "id": "R03-04",
+          "name": "Fries",
+          "category": "Side",
+          "price": 90.0
+        },
+        {
+          "id": "R03-05",
+          "name": "Onion Rings",
+          "category": "Side",
+          "price": 100.0
+        },
+        {
+          "id": "R03-06",
+          "name": "Cola",
+          "category": "Drink",
+          "price": 50.0
+        }
+      ]
+    },
+    {
+      "id": "R04",
+      "name": "Yeşil Tabak",
+      "cuisine": "Vegan",
+      "district": "Kadıköy",
+      "deliveryFee": 30.0,
+      "minimumBasket": 180.0,
+      "menu": [
+        {
+          "id": "R04-01",
+          "name": "Falafel Wrap",
+          "category": "Main",
+          "price": 220.0
+        },
+        {
+          "id": "R04-02",
+          "name": "Buddha Bowl",
+          "category": "Main",
+          "price": 260.0
+        },
+        {
+          "id": "R04-03",
+          "name": "Mercimek Köftesi",
+          "category": "Starter",
+          "price": 150.0
+        },
+        {
+          "id": "R04-04",
+          "name": "Hummus",
+          "category": "Starter",
+          "price": 130.0
+        },
+        {
+          "id": "R04-05",
+          "name": "Kombucha",
+          "category": "Drink",
+          "price": 85.0
+        },
+        {
+          "id": "R04-06",
+          "name": "Raw Brownie",
+          "category": "Dessert",
+          "price": 140.0
+        }
+      ]
+    },
+    {
+      "id": "R05",
+      "name": "Dönerci Usta",
+      "cuisine": "Turkish",
+      "district": "Üsküdar",
+      "deliveryFee": 20.0,
+      "minimumBasket": 120.0,
+      "menu": [
+        {
+          "id": "R05-01",
+          "name": "Tavuk Döner Dürüm",
+          "category": "Main",
+          "price": 170.0
+        },
+        {
+          "id": "R05-02",
+          "name": "Et Döner Porsiyon",
+          "category": "Main",
+          "price": 340.0
+        },
+        {
+          "id": "R05-03",
+          "name": "Pilav",
+          "category": "Side",
+          "price": 60.0
+        },
+        {
+          "id": "R05-04",
+          "name": "Ayran",
+          "category": "Drink",
+          "price": 35.0
+        },
+        {
+          "id": "R05-05",
+          "name": "Sütlaç",
+          "category": "Dessert",
+          "price": 110.0
+        }
+      ]
+    },
+    {
+      "id": "R06",
+      "name": "Tatlı Durağı",
+      "cuisine": "Dessert",
+      "district": "Ataşehir",
+      "deliveryFee": 30.0,
+      "minimumBasket": 150.0,
+      "menu": [
+        {
+          "id": "R06-01",
+          "name": "Baklava (4 pieces)",
+          "category": "Dessert",
+          "price": 260.0
+        },
+        {
+          "id": "R06-02",
+          "name": "Kazandibi",
+          "category": "Dessert",
+          "price": 150.0
+        },
+        {
+          "id": "R06-03",
+          "name": "Profiterol",
+          "category": "Dessert",
+          "price": 170.0
+        },
+        {
+          "id": "R06-04",
+          "name": "Türk Kahvesi",
+          "category": "Drink",
+          "price": 80.0
+        },
+        {
+          "id": "R06-05",
+          "name": "Çay",
+          "category": "Drink",
+          "price": 30.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+@startuml
+' System sequence diagram: UC Place Order, main success scenario
+actor Customer
+participant ":FoodFlow" as System
+Customer -> System : listRestaurants(cuisine?, district?)
+System --> Customer : restaurants
+' TODO: complete with the system operations of your use case
+@enduml
