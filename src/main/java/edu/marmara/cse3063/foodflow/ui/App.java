@@ -1,4 +1,4 @@
-package edu.marmara.cse3063.foodflow;
+package edu.marmara.cse3063.foodflow.ui;
 
 /**
  * FoodFlow entry point.

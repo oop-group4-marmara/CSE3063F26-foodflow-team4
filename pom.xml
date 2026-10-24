@@ -51,7 +51,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.5.1</version>
                 <configuration>
-                    <mainClass>edu.marmara.cse3063.foodflow.App</mainClass>
+                    <mainClass>edu.marmara.cse3063.foodflow.ui.App</mainClass>
                 </configuration>
             </plugin>
         </plugins>
