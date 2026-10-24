@@ -4,9 +4,9 @@
 *One sentence.*
 
 ## Planned work
-| ID | Item (feature / artifact) | Owner | Reviewer | Estimate (h) | Status |
-|---|---|---|---|---|---|
-| | | | | | |
+| ID | Item (feature / artifact)        | Owner     | Reviewer          | Estimate (h) | Status    |
+|----|----------------------------------|-----------|-------------------|--------------|-----------|
+| #0 | Setup architecture and projects. | Cihangir  | Ibrahim, Ali Eren | 3            | In Review |
 
 ## Top risks
 | # | Risk | Likelihood (L/M/H) | Impact (L/M/H) | Mitigation |
