@@ -17,7 +17,9 @@ Diagram: `diagrams/use-cases.puml` (export to PNG for the report).
                             
 **UC15 Oversee Restaurants, Couriers and Orders** — *The Platform Administrator always wants information about how the system is running. So the system presents the Restaurants, the Couriers and the Orders with their statuses, making a stalled Restaurant or a late delivery visible.*
 
-**UC16 Configure Fees and Promotions** — *Over time, the Platform Administrator will need to configure the fee and make promotions for Customers. The system applies the updated settings to all orders placed after the change. The Customer sees the fees and is able to add promotion to the Order.*
+**UC16 Configure Fees and Promotions** — *Over time, the Platform Administrator will need to configure the fee and make promotions for Customers. The system applies the updated settings to all orders placed after the change.*
+
+**UC17 Apply Promotions** — *After the Customer adds items to the Cart, the system displays the available promotions. When the Customer selects a promotion, the system applies it and updates the Cart total, which is calculated from the item prices plus the computed fees, minus the promotion discount.*
 
 ## Fully dressed use cases
 
