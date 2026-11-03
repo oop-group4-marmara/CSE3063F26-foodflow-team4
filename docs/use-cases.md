@@ -9,36 +9,36 @@ Diagram: `diagrams/use-cases.puml` (export to PNG for the report).
 
 **UC3 Filter Restaurants** — *The Customer wants a specific kind of food or only the Restaurants in their own district. The Customer gives a cuisine, a district or both and the system shows the matching Restaurants.*
 
-**UC4 View Menu** — *When the Customer has chosen a Restaurant, they want the Menu. So the system provides it. The Menu items by category with their prices plus the delivery fee.*
+**UC4 View Menu** — *When the Customer has chosen a Restaurant, they want the Menu. So the system provides it. The Menu lists the items by category with their prices plus the delivery fee.*
 
 **UC7 View Orders** — *The Customer asks for their previous Orders so the system lists each one with its number, Restaurant, total and status.*
 
-**UC8 Check Order Status** — *After ordering the food, the Customer wants to see where the Order is. Still at the Restaurant or already with the Courier? The system presents its current status and who is carrying it.*
-
+**UC8 Check Order Status** — *After placing the order, the Customer wants to see the status of the Order. Whether it is still at the restaurant or in delivery progress. The system presents its current status and who is carrying it.*
+                            
 **UC15 Oversee Restaurants, Couriers and Orders** — *The Platform Administrator always wants information about how the system is running. So the system presents the Restaurants, the Couriers and the Orders with their statuses, making a stalled Restaurant or a late delivery visible.*
 
-**UC16 Configure Fees and Promotions** — *Over time the Platform Administrator will need to configure the fee and make promotions for Customers. The system applies them to Orders placed from then on.*
+**UC16 Configure Fees and Promotions** — *Over time, the Platform Administrator will need to configure the fee and make promotions for Customers. The system applies the updated settings to all orders placed after the change. The Customer sees the fees and is able to add promotion to the Order.*
 
 ## Fully dressed use cases
 
 ### UC5 Manage Cart
 
-| Section | Content |
-|---|---|
-| Scope | FoodFlow system |
-| Level | User goal |
-| Primary actor | Customer |
-| Stakeholders and interests | **Customer:** checks the cart most of the time, adding and removing items, and wants to see the quantity next to the price, plus the delivery fee, as the total. **Restaurant:** wants to receive orders only from its own menu and not mixed with other menus; this is a business rule. **Platform administrator:** wants the cart to stay stable and consistent, so orders are priced correctly and passed on to Place Order. |
-| Preconditions | UC1: a Customer is identified. UC4: the Customer is at a Restaurant's menu. |
-| Success guarantee (postconditions) | BR-1: the menu item price is positive and the quantity is between 1 and 20.<br>BR-2: all lines come from one Restaurant only.<br>BR-3: there are never two lines for the same menu item.<br>BR-5: the subtotal comes from the lines, and subtotal plus delivery fee is shown as the total. |
-| Trigger | The Customer wants to add, change or remove items before ordering. |
+| Section                            | Content                                                                                                                                                                                                                                                                                                                                                                                                                         |
+|------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Scope                              | FoodFlow system                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Level                              | User goal                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Primary actor                      | Customer                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| Stakeholders and interests         | **Customer:** checks the cart most of the time, adding and removing items, and wants to see the quantity next to the price, plus the delivery fee, as the total. **Restaurant:** wants to receive orders only from its own menu and not mixed with other menus; this is a business rule. **Platform administrator:** wants the cart to stay stable and consistent, so orders are priced correctly and passed on to Place Order. |
+| Preconditions                      | UC1: a Customer is identified. UC4: the Customer is at a Restaurant's menu.                                                                                                                                                                                                                                                                                                                                                     |
+| Success guarantee (postconditions) | BR-1: the menu item price is positive and the quantity is between 1 and 20.<br>BR-2: all lines come from one Restaurant only.<br>BR-3: there are never two lines for the same menu item.<br>BR-5: the subtotal comes from the lines, and subtotal plus delivery fee is shown as the total.                                                                                                                                      |
+| Trigger                            | The Customer wants to add, change or remove items before ordering.                                                                                                                                                                                                                                                                                                                                                              |
 
 **Main success scenario**
 
 1. Customer wants to add a menu item with a quantity.
 2. System checks that the quantity is within the allowed range and adds a cart line.
 3. Customer asks to change the quantity.
-4. System checks that the new quantity is within the allowed range, then changes it.
+4. System checks that the new quantity is within the allowed range, then changes it. (Repeat step 3 and 4 until quantity is same with Customer preference)
 5. Customer wants to remove a cart line.
 6. System removes the line from the cart.
 7. Customer wants to view the cart.
@@ -49,7 +49,7 @@ Diagram: `diagrams/use-cases.puml` (export to PNG for the report).
 - \*a. At any time, Customer enters an unknown command. System reports a message to the Customer. (BR-9)
 - 2a. The quantity is not in the allowed range of 1 to 20. System refuses the addition and reports that the quantity must be between 1 and 20. (BR-1)
 - 2b. Customer adds an item already in a line. System increases the quantity of the same line. (BR-3)
-- 2b1. The increase might exceed 20, so System refuses the addition. (BR-1)
+- 2b1. The increase might exceed 20, so the System refuses the addition. (BR-1)
 - 2c. Customer adds an item from a different Restaurant's menu. System refuses the request and suggests emptying the cart to continue. (BR-2)
 - 2c1. Customer empties the cart. System clears all the lines.
 - 2c2. Customer keeps the cart. System changes nothing.
@@ -59,7 +59,7 @@ Diagram: `diagrams/use-cases.puml` (export to PNG for the report).
 
 **Special requirements**
 
-- Prices must be shown with two decimals and the suffix "TL". (BR-5)
+- Prices must be shown with two decimals and with the suffix "TL". (BR-5)
 - The system never terminates; it always reports to the Customer with a message saying what was wrong. (BR-9)
 
 **Technology and data variations**
@@ -78,25 +78,24 @@ Very frequent: several times in every ordering session, and the most used use ca
 - Should a quantity of 0 be accepted as removing the line, or refused by BR-1?
 
 
-
 ### UC6 Place Order
 
-| Section | Content |
-|---|---|
-| Scope | FoodFlow system |
-| Level | User goal |
-| Primary actor | Customer |
-| Stakeholders and interests | **Customer:** wants the order to reach their address, and wants proof of it in a receipt. **Restaurant:** wants a real and complete order with the items. **Courier:** wants the delivery address. **Platform administrator:** wants every order to carry a special, unique number and to be traceable. |
-| Preconditions | UC1: a Customer is identified. UC5: the cart is not empty. |
+| Section                            | Content                                                                                                                                                                                                                                                                                 |
+|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Scope                              | FoodFlow system                                                                                                                                                                                                                                                                         |
+| Level                              | User goal                                                                                                                                                                                                                                                                               |
+| Primary actor                      | Customer                                                                                                                                                                                                                                                                                |
+| Stakeholders and interests         | **Customer:** wants the order to reach their address, and wants proof of it in a receipt. **Restaurant:** wants a real and complete order with the items. **Courier:** wants the delivery address. **Platform administrator:** wants every order to be unique and traceable.            |
+| Preconditions                      | UC1: a Customer is identified. UC5: the cart is not empty.                                                                                                                                                                                                                              |
 | Success guarantee (postconditions) | BR-6: an order with a unique number and the status PLACED.<br>BR-5: the total is subtotal plus delivery fee.<br>BR-7: the receipt is reported and the cart is empty; the order keeps the item names and prices recorded at placement, so a later menu change does not change its total. |
-| Trigger | The Customer asks to place the order for the current cart. |
+| Trigger                            | The Customer asks to place the order for the current cart.                                                                                                                                                                                                                              |
 
 **Main success scenario**
 
 1. Customer asks to place the order.
 2. System checks that the Customer has a delivery address and that the cart is not empty.
 3. System constructs the total by adding the subtotal and the delivery fee, and presents it in detail.
-4. System assigns a number to the order, which must be unique and increasing, and sets the status to PLACED.
+4. System assigns a number to the order and sets the status.
 5. System prints the receipt: order number, status, Restaurant, each order line with its line total, the subtotal and the delivery fee, the delivery address and the payment method.
 6. System empties the cart.
 7. Customer can view their order any time later (UC7).
