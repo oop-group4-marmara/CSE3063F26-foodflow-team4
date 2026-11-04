@@ -2,6 +2,8 @@ package edu.marmara.cse3063.foodflow.domain;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
+
+//throws IllegalArgumentException in Constructor in case of empty fields or wrong email pattern
 public class Customer
 {
 
@@ -25,7 +27,7 @@ public class Customer
         }
 
         this.name = name;
-        this.email = email;
+        this.email = email.trim();
         this.district = district;
         this.street = street;
     }
