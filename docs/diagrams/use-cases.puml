@@ -23,6 +23,7 @@ rectangle FoodFlow {
     usecase "Deliver Order" as UC14
     usecase "Oversee Restaurants, Couriers and Orders" as UC15
     usecase "Configure Fees and Promotions" as UC16
+    usecase "Apply Promotions" as UC17
 }
 Customer --> UC1
 Customer --> UC2
@@ -34,6 +35,7 @@ Customer --> UC7
 Customer --> UC8
 Customer --> UC9
 Customer --> UC10
+Customer --> UC17
 
 Owner --> UC11
 Owner --> UC12
