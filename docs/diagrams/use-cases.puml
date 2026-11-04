@@ -1,13 +1,54 @@
 @startuml
 left to right direction
+
 actor Customer
 actor "Restaurant Owner" as Owner
 actor Courier
+actor "Platform Administrator" as Admin
+
 rectangle FoodFlow {
-  usecase "Browse restaurants" as UC1
-  usecase "Place order" as UC2
-  ' TODO: complete for the whole product; mark Iteration 1 use cases
+    usecase "Identify the Customer" as UC1 #LightGreen
+    usecase "Browse restaurants" as UC2 #LightGreen
+    usecase "Filter Restaurants" as UC3 #LightGreen
+    usecase "View Menu" as UC4 #LightGreen
+    usecase "Manage Cart" as UC5 #LightGreen
+    usecase "Place Order" as UC6 #LightGreen
+    usecase "View Orders" as UC7 #LightGreen
+    usecase "Check Order Status" as UC8
+    usecase "Review Restaurant" as UC9
+    usecase "Rate Courier" as UC10
+    usecase "Modify Menus" as UC11
+    usecase "Accept or Reject Orders" as UC12
+    usecase "Go Online" as UC13
+    usecase "Deliver Order" as UC14
+    usecase "Oversee Restaurants, Couriers and Orders" as UC15
+    usecase "Configure Fees and Promotions" as UC16
+    usecase "Apply Promotions" as UC17
 }
 Customer --> UC1
 Customer --> UC2
+Customer --> UC3
+Customer --> UC4
+Customer --> UC5
+Customer --> UC6
+Customer --> UC7
+Customer --> UC8
+Customer --> UC9
+Customer --> UC10
+Customer --> UC17
+
+Owner --> UC11
+Owner --> UC12
+
+Courier --> UC13
+Courier --> UC14
+
+Admin --> UC15
+Admin --> UC16
+
+legend right
+    |= Color |= Meaning |
+    |<#LightGreen> | Iteration 1 scope |
+endlegend
+
 @enduml
