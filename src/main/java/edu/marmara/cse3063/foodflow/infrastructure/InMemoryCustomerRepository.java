@@ -16,19 +16,19 @@ public class InMemoryCustomerRepository implements CustomerRepository
     @Override
     public Customer saveCustomer(Customer customer)
     {
-        store.put(customer.getEmail().trim(),customer);
+        store.put(customer.getEmail().trim().toLowerCase(),customer);
         return customer;
     }
     @Override
     public Optional<Customer> findCustomerByEmail(String email)
     {
         if(email==null) return Optional.empty();
-        return Optional.ofNullable(store.get(email.trim()));
+        return Optional.ofNullable(store.get(email.trim().toLowerCase()));
     }
     @Override
     public boolean customerExistsByEmail(String email)
     {
         if(email==null) return false;
-        return store.containsKey(email.trim());
+        return store.containsKey(email.trim().toLowerCase());
     }
 }

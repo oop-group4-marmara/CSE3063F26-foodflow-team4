@@ -15,7 +15,7 @@ public class CustomerService
 
     public Customer registerCustomer(String name ,String email , String district , String street)
     {
-        if(repository.customerExistsByEmail(email.trim()))
+        if(repository.customerExistsByEmail(email))
         {
             throw new IllegalStateException("Email '"+email +"' is already registered. Please log in as existing customer.");
         }
