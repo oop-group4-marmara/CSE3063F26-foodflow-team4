@@ -49,9 +49,9 @@ public class CustomerServiceTest
             "'   ', email@test.com, District, Street"
     })
     @DisplayName("2. Empty Field Rejection: Fails if any parameter is null, empty, or blank")
-    void testEmptyFieldsRejection(String name, String email, Address address) {
+    void testEmptyFieldsRejection(String name, String email, String district , String street) {
         assertThrows(IllegalArgumentException.class,
-                () -> service.registerCustomer(name, email, address));
+                () -> service.registerCustomer(name, email, new Address(district,street)));
     }
 
     @ParameterizedTest
