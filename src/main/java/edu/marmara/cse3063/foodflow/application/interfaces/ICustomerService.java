@@ -6,7 +6,7 @@ import edu.marmara.cse3063.foodflow.domain.models.Customer;
 import java.util.Optional;
 
 public interface ICustomerService {
-    public Customer registerCustomer(String email, String name, Address address);
+    public Customer registerCustomer(String email, String name, Address address) throws Exception;
     public Customer loginExisting(String email);
     public Optional<Customer> getActiveCustomer();
 }

@@ -31,7 +31,7 @@ public class CustomerServiceTest
 
     @Test
     @DisplayName("1. Valid Registration: Creates customer and sets active session")
-    void testValidRegistration() {
+    void testValidRegistration() throws Exception {
         Customer customer = service.registerCustomer("Alice Smith", "alice@example.com", new Address("Kadıköy", "Moda st."));
 
         assertNotNull(customer);
@@ -63,7 +63,7 @@ public class CustomerServiceTest
     }
     @Test
     @DisplayName("4. Duplicate E-mail Prevention: Rejects registration with existing email (case-insensitive)")
-    void testDuplicateEmailRejection() {
+    void testDuplicateEmailRejection() throws Exception {
         service.registerCustomer("First User", "user@example.com", new Address("ALi eren dt.","Şimşir sk."));
 
         // Attempting to register again with matching or mixed-case email must fail
@@ -72,7 +72,7 @@ public class CustomerServiceTest
     }
     @Test
     @DisplayName("5. Existing Customer Login: Sets active customer using email case-insensitively")
-    void testExistingCustomerLogin() {
+    void testExistingCustomerLogin() throws Exception {
         service.registerCustomer("Bob", "bob@example.com", new Address("Beşiktaş", "Çarşı st."));
 
         // Clear active session to simulate starting fresh

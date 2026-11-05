@@ -17,8 +17,7 @@ public class CustomerService implements ICustomerService
         this.repository = repo;
     }
 
-    public Customer registerCustomer(String name, String email, Address address)
-    {
+    public Customer registerCustomer(String name, String email, Address address) throws Exception {
         if (repository.customerExistsByEmail(email))
         {
             throw new IllegalStateException("Email '"+email +"' is already registered. Please log in as existing customer.");
