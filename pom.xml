@@ -16,7 +16,6 @@
         <junit.version>6.0.3</junit.version>
     </properties>
 
-    <dependencyManagement>
     <dependencies>
         <!-- JSON reading/writing (Iteration 1: loading restaurants.json) -->
         <dependency>
@@ -28,19 +27,8 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-    </dependencyManagement>
-
-    <dependencies>
-        <!-- JUnit Test -->
-        <dependency>
-            <groupId>org.junit</groupId>
-            <artifactId>junit-bom</artifactId>
             <version>6.0.3</version>
-            <type>pom</type>
-            <scope>import</scope>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
