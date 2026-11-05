@@ -1,10 +1,14 @@
-package edu.marmara.cse3063.foodflow.domain;
+package edu.marmara.cse3063.foodflow.junittest;
 
 
 
-import edu.marmara.cse3063.foodflow.application.CustomerService;
-import edu.marmara.cse3063.foodflow.infrastructure.InMemoryCustomerRepository;
+import edu.marmara.cse3063.foodflow.application.services.CustomerService;
+import edu.marmara.cse3063.foodflow.domain.models.Address;
+import edu.marmara.cse3063.foodflow.domain.models.Customer;
+import edu.marmara.cse3063.foodflow.infrastructure.interfaces.ICustomerRepository;
+import edu.marmara.cse3063.foodflow.infrastructure.repositories.InMemoryCustomerRepository;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,10 +18,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@Tag("fast")
 public class CustomerServiceTest
 {
-    private CustomerService service ;
+    private CustomerService service;
 
     @BeforeEach
     public void  setUp()
@@ -28,7 +32,7 @@ public class CustomerServiceTest
     @Test
     @DisplayName("1. Valid Registration: Creates customer and sets active session")
     void testValidRegistration() {
-        Customer customer = service.registerCustomer("Alice Smith", "alice@example.com", "Kadikoy", "Moda St.");
+        Customer customer = service.registerCustomer("Alice Smith", "alice@example.com", new Address("Kadıköy", "Moda st."));
 
         assertNotNull(customer);
         assertEquals("alice@example.com", customer.getEmail());
@@ -45,9 +49,9 @@ public class CustomerServiceTest
             "'   ', email@test.com, District, Street"
     })
     @DisplayName("2. Empty Field Rejection: Fails if any parameter is null, empty, or blank")
-    void testEmptyFieldsRejection(String name, String email, String district, String street) {
+    void testEmptyFieldsRejection(String name, String email, Address address) {
         assertThrows(IllegalArgumentException.class,
-                () -> service.registerCustomer(name, email, district, street));
+                () -> service.registerCustomer(name, email, address));
     }
 
     @ParameterizedTest
@@ -55,28 +59,28 @@ public class CustomerServiceTest
     @DisplayName("3. Invalid E-mail Format: Fails when email format is invalid")
     void testInvalidEmailFormatRejection(String invalidEmail) {
         assertThrows(IllegalArgumentException.class,
-                () -> service.registerCustomer("John Doe", invalidEmail, "District", "Street"));
+                () -> service.registerCustomer("John Doe", invalidEmail, new Address("District", "Street")));
     }
     @Test
     @DisplayName("4. Duplicate E-mail Prevention: Rejects registration with existing email (case-insensitive)")
     void testDuplicateEmailRejection() {
-        service.registerCustomer("First User", "user@example.com", "District1", "Street1");
+        service.registerCustomer("First User", "user@example.com", new Address("ALi eren dt.","Şimşir sk."));
 
         // Attempting to register again with matching or mixed-case email must fail
         assertThrows(IllegalStateException.class,
-                () -> service.registerCustomer("Second User", "USER@EXAMPLE.COM", "District2", "Street2"));
+                () -> service.registerCustomer("Second User", "USER@EXAMPLE.COM", new Address("District2", "Street2")));
     }
     @Test
     @DisplayName("5. Existing Customer Login: Sets active customer using email case-insensitively")
     void testExistingCustomerLogin() {
-        service.registerCustomer("Bob", "bob@example.com", "Beşiktaş", "Çarşı St.");
+        service.registerCustomer("Bob", "bob@example.com", new Address("Beşiktaş", "Çarşı st."));
 
         // Clear active session to simulate starting fresh
         CustomerService freshSessionService = new CustomerService(new InMemoryCustomerRepository());
 
         // Re-populate repository to emulate pre-existing data
-        CustomerRepository repo = new InMemoryCustomerRepository();
-        repo.saveCustomer(new Customer("Bob", "bob@example.com", "Beşiktaş", "Çarşı St."));
+        ICustomerRepository repo = new InMemoryCustomerRepository();
+        repo.saveCustomer(new Customer("Bob", "bob@example.com", new Address("Beşiktaş", "Çarşı st.")));
         CustomerService loginService = new CustomerService(repo);
 
         Customer loggedIn = loginService.loginExisting("BOB@EXAMPLE.COM");
