@@ -5,36 +5,48 @@ _This plan was started at the beginning of Iteration 1 (setup, glossary and doma
 Understand the product, document its requirements and domain, and deliver a thin, working, end-to-end console slice in which a Customer can browse restaurants and menus, fill a cart and place a cash-on-delivery order (D1–D7, D9).
 
 ## Planned work
-| ID  | Item (feature / artifact)                         | Owner (GitHub)    | Reviewer                           | Estimate (h) | Status      |
-|-----|---------------------------------------------------|-------------------|------------------------------------|--------------|-------------|
-| #13 | Setup: N-Tier architecture skeleton (PR #28)      | cihangiryaman     | MesutMG, ibrahimkabadayi           | 3            | Done        |
-| #14 | D1: Vision and scope (PR #29)                     | ibrahimkabadayi   | cihangiryaman, MesutMG             | 2            | Done        |
-| #15 | D2: Glossary (PR #30)                             | cihangiryaman     | ibrahimkabadayi, MesutMG, Ckatalay | 2            | Done        |
-| #16 | D3: Use-case model (PR #33)                       | AhmadAziizi       | cihangiryaman, ibrahimkabadayi     | 6            | Done        |
-| #18 | D5: Domain model (PR #35)                         | cihangiryaman     | Ckatalay, ibrahimkabadayi          | 5            | Done        |
-| #31 | One example test runs with "mvn test"             | MesutMG           | TBD                                | 1            | Done        |
-| #6  | F1: Identify the customer (PR #36 open)           | ashpynx           | cihangiryaman, MesutMG             | 3            | In progress |
-| #19 | D6: SSD and contracts                             | AhmadAziizi       | TBD                                | 2            | In progress |
-| #7  | F2: Browse restaurants                            | cihangiryaman     | TBD                                | 2            | Todo        |
-| #8  | F3: Filter restaurants                            | ashpynx           | TBD                                | 2            | Todo        |
-| #9  | F4: View a menu                                   | AhmadAziizi       | TBD                                | 2            | Todo        |
-| #10 | F5: Manage the cart                               | MesutMG           | TBD                                | 3            | Todo        |
-| #11 | F6: Place an order                                | Ckatalay          | TBD                                | 2            | Todo        |
-| #12 | F7: My orders (optional)                          | ibrahimkabadayi   | TBD                                | 3            | Todo        |
-| #17 | D4: Supplementary specification                   | ashpynx           | TBD                                | 2            | Todo        |
-| #20 | D7: Working software (2 of 5 sub-issues done)     | Ckatalay, MesutMG | TBD                                | 6            | Todo        |
-| #23 | – Setup: JUnit                                    | MesutMG           | ibrahimkabadayi, cihangiryaman     | 1            | Done        |
-| #24 | – Unit tests for domain rules (≥ 10)              | MesutMG           | TBD                                | 2            | In progress |
-| #25 | – README with build and run instructions (PR #34) | Ckatalay          | ibrahimkabadayi, cihangiryaman     | 1            | Done        |
-| #26 | – Verify iteration                                | MesutMG           | TBD                                | 1            | Todo        |
-| #27 | – Test sample run (`docs/sample-run.txt`)         | Ckatalay          | TBD                                | 1            | Todo        |
-| #21 | D8: Iteration report                              | ibrahimkabadayi   | all members                        | 1            | Todo        |
-| #22 | D9: Plan for Iteration 2 (this file)              | whole team        | all members                        | 2            | In progress |
+| ID  | Item (feature / artifact)                                           | Owner (GitHub)    | Reviewer                                | Estimate (h) | Status      |
+|-----|---------------------------------------------------------------------|-------------------|-----------------------------------------|--------------|-------------|
+| #13 | Setup: N-Tier architecture skeleton (PR #28)                        | cihangiryaman     | MesutMG, ibrahimkabadayi                | 3            | Done        |
+| #14 | D1: Vision and scope (PR #29)                                       | ibrahimkabadayi   | cihangiryaman, MesutMG                  | 2            | Done        |
+| #15 | D2: Glossary (PR #30)                                               | cihangiryaman     | ibrahimkabadayi, MesutMG, Ckatalay      | 2            | Done        |
+| #16 | D3: Use-case model (PR #33)                                         | AhmadAziizi       | cihangiryaman, ibrahimkabadayi          | 6            | Done        |
+| #18 | D5: Domain model (PR #35)                                           | cihangiryaman     | Ckatalay, ibrahimkabadayi               | 5            | Done        |
+| #31 | One example test runs with "mvn test"                               | MesutMG           | ashpynx, Ckatalay                       | 1            | Done        |
+| #6  | F1: Identify the customer (PR #36 open)                             | ashpynx           | cihangiryaman, MesutMG                  | 3            | In progress |
+| #19 | D6: SSD and contracts                                               | AhmadAziizi       | ibrahimkabadayi, Ckatalay               | 2            | In progress |
+| #7  | F2: Browse restaurants                                              | cihangiryaman     | MesutMG, AhmadAziizi                    | 2            | In progress |
+| #8  | F3: Filter restaurants                                              | ashpynx           | cihangiryaman, Ckatalay                 | 2            | Todo        |
+| #9  | F4: View a menu                                                     | AhmadAziizi       | ashpynx, ibrahimkabadayi                | 2            | Todo        |
+| #10 | F5: Manage the cart                                                 | MesutMG           | cihangiryaman, ashpynx                  | 3            | Todo        |
+| #11 | F6: Place an order                                                  | Ckatalay          | ashpynx, MesutMG                        | 2            | Todo        |
+| #12 | F7: My orders (optional)                                            | ibrahimkabadayi   | cihangiryaman, Ckatalay                 | 3            | Todo        |
+| #17 | D4: Supplementary specification                                     | ashpynx           | AhmadAziizi, ibrahimkabadayi            | 2            | In progress |
+| #20 | D7: Working software (2 of 5 sub-issues done)                       | Ckatalay, MesutMG | ibrahimkabadayi, ashpynx, cihangiryaman | 6            | Todo        |
+| #23 | – Setup: JUnit                                                      | MesutMG           | ibrahimkabadayi, cihangiryaman, ashpynx | 1            | Done        |
+| #24 | – Unit tests for domain rules (≥ 10)                                | MesutMG           | AhmadAziizi, Ckatalay                   | 2            | In progress |
+| #25 | – README with build and run instructions (PR #34)                   | Ckatalay          | ibrahimkabadayi, cihangiryaman, ashpynx | 1            | Done        |
+| #26 | – Verify iteration                                                  | MesutMG           | Ckatalay, ibrahimkabadayi               | 1            | Todo        |
+| #27 | – Test sample run (`docs/sample-run.txt`)                           | Ckatalay          | MesutMG, ashpynx                        | 1            | Todo        |
+| #21 | D8: Iteration report                                                | ibrahimkabadayi   | all members                             | 3            | In progress |
+| #22 | D9: Plan for Iteration 2                                            | whole team        | all members                             | 2            | In progress |
+| #   | Submission: tag `iteration-1`, report PDF, zip, upload (one member) | Ckatalay          | ibrahimkabadayi, MesutMG                | 1            | Todo        |
+
+## Plan for Iteration 2
+**Goal:** Deliver the core order flow with restaurant owners and couriers, so that an order moves from PLACED to delivered.
+
+| Item                           | Notes                                                                                                                     | Priority |
+|--------------------------------|---------------------------------------------------------------------------------------------------------------------------|----------|
+| Planning first                 | Complete this file in the first planning meeting: rotate roles, and give every task an owner, a reviewer and an estimate. | Must     |
+| Owner and courier functions    | Menu management, accept or reject orders, courier assignment, pick up and deliver.                                        | Must     |
+| Order life cycle and new rules | Status changes after PLACED (state machine), distance-based fee, opening hours, minimum basket.                           | Must     |
+| JSON persistence and logging   | Replaces in-memory storage; add `java.util.logging`.                                                                      | Should   |
+| Refactor, coverage and CI      | GRASP review from I1 feedback, JaCoCo report, GitHub Actions (bonus).                                                     | Could    |
 
 ## Top risks
 | # | Risk                                                                                                                                                                                                                                          | Likelihood (L/M/H) | Impact (L/M/H) | Mitigation                                                                                                                                                                                                                                                                                                                                                                 |
 |---|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1 | Most working-software features (F2–F7) and D4 are still Todo, so the walking skeleton may not be complete and demo-ready by the deadline.                                                                                                     | H                  | H              | Merge F2 to F6 first (the Must features) and treat F7 as optional. Merge small pull requests often. Hold a short stand-up every two days. Cut F7 first if time runs out.                                                                                                                                                                                                   |
+| 1 | Most working-software features are still Todo, so the walking skeleton may not be complete and demo-ready by the deadline.                                                                                                                    | H                  | H              | Merge F2 to F6 first (the Must features) and treat F7 as optional. Merge small pull requests often. Hold a short stand-up every two days. Cut F7 first if time runs out.                                                                                                                                                                                                   |
 | 2 | Documents, diagrams and code drift apart (glossary terms, BR-x in use cases, domain model vs. classes, SSD vs. `OrderingService`).                                                                                                            | M                  | H              | The Modelling lead checks consistency before the tag. Every BR-1 to BR-9 is mapped to one class and to a use-case step or extension. Diagrams are updated in the same PR as the code.                                                                                                                                                                                      |
 | 3 | Business rules leak into the UI or into a god class, and the BR-7 decision (Order keeps name and price at placement) is made late.                                                                                                            | M                  | H              | Rules live in domain constructors and methods. The UI only catches exceptions (BR-9). Decide the BR-7 snapshot design before F6 is implemented and write it up as a report rationale entry.                                                                                                                                                                                |
 | 4 | Uneven participation, last-minute merging, or reviews that are not visible, which hurts Process & teamwork and the individual contribution factor.                                                                                            | M                  | M              | Small PRs with at least one approving reviewer from another member. Keep the board current. Every member merges at least one PR. Report problems to the assistant early.                                                                                                                                                                                                   |
@@ -42,5 +54,5 @@ Understand the product, document its requirements and domain, and deliver a thin
 
 ## Retrospective (end of iteration)
 * **Keep** — what worked: Work was tracked on the GitHub Projects board, with issues linked to pull requests and the documents (D1, D2, D3, D5) merged early through PRs.
-* **Problem** — what did not: This plan was only completed late, so the board and the plan were out of sync, and the feature work (F2–F7) started late in the iteration.
+* **Problem** — what did not: This plan was only completed late, so the board and the plan were out of sync, and the feature work started late in the iteration.
 * **Try** — one concrete change for the next iteration: Complete this file in the first planning meeting of Iteration 2, with owners, reviewers and estimates, and update it at every stand-up.
