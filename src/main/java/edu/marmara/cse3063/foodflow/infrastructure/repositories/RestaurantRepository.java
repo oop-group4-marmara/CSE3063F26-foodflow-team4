@@ -86,8 +86,8 @@ public class RestaurantRepository implements IRestaurantRepository
             for (JsonElement entry : requireArray(data.get("menu"), "menu"))
             {
                 JsonObject item = requireObject(entry, "menu item");
-                menuItems.add(createMenuItem(requireString(item, "name"), requireString(item, "category"),
-                        requireNumber(item, "price")));
+                menuItems.add(createMenuItem(requireString(item, "id"), requireString(item, "name"),
+                        requireString(item, "category"), requireNumber(item, "price")));
             }
             // The current catalog omits city; do not invent a location for it.
             String city = data.has("city") && !data.get("city").isJsonNull()
@@ -106,17 +106,17 @@ public class RestaurantRepository implements IRestaurantRepository
         ArrayList<MenuItem> menuItems = new ArrayList<>();
         for (MenuItem item : restaurant.getMenuItems())
         {
-            menuItems.add(createMenuItem(item.getName(), item.getCategory(), item.getPrice()));
+            menuItems.add(createMenuItem(item.getId(), item.getName(), item.getCategory(), item.getPrice()));
         }
         return new Restaurant(restaurant.getId(), restaurant.getName(), restaurant.getCuisine(),
                 restaurant.getCity(), restaurant.getDistrict(), restaurant.getDeliveryFee(), menuItems);
     }
 
-    private static MenuItem createMenuItem(String name, String category, double price)
+    private static MenuItem createMenuItem(String id, String name, String category, double price)
     {
         try
         {
-            return new MenuItem(name, category, price);
+            return new MenuItem(id, name, category, price);
         }
         catch (Exception exception)
         {
