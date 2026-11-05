@@ -7,3 +7,4 @@ Undisclosed use is treated as an academic-integrity violation (see the syllabus)
 |------------|----------|--------|------------------------------------------------------------|-------------------------------------------------|
 | 04.11.2026 | Cihangir | Codex  | Correct a connection mistake made in the PlantUML schema.  | Accepted the change                             |
 | 05.11.2026 | İbrahim  | Claude | Used claude to create some of the text of iteration report | In progress                                     |
+| 05.11.2026 | Cihangir | Codex  | Plan the customer registration/sign-in console flow | kept repository access in App and services, outside the UI. Dictate architectural boundaries. |
