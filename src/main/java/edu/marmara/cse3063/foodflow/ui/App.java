@@ -6,6 +6,7 @@ package edu.marmara.cse3063.foodflow.ui;
  * Keep this class tiny: it should only create the objects of your system,
  * connect them, and start the console user interface. No business rules here.
  */
+
 public class App {
 
     public static void main(String[] args) {
