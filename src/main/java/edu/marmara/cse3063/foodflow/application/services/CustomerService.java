@@ -1,25 +1,29 @@
-package edu.marmara.cse3063.foodflow.application;
+package edu.marmara.cse3063.foodflow.application.services;
 
-import edu.marmara.cse3063.foodflow.domain.*;
+import edu.marmara.cse3063.foodflow.application.interfaces.ICustomerService;
+import edu.marmara.cse3063.foodflow.domain.models.Address;
+import edu.marmara.cse3063.foodflow.domain.models.Customer;
+import edu.marmara.cse3063.foodflow.infrastructure.interfaces.ICustomerRepository;
+
 import java.util.Optional;
 
-public class CustomerService
+public class CustomerService implements ICustomerService
 {
-    private final CustomerRepository repository;
+    private final ICustomerRepository repository;
     private Customer activeCustomer;
 
-    public CustomerService(CustomerRepository repo)
+    public CustomerService(ICustomerRepository repo)
     {
         this.repository = repo;
     }
 
-    public Customer registerCustomer(String name ,String email , String district , String street)
+    public Customer registerCustomer(String name, String email, Address address)
     {
-        if(repository.customerExistsByEmail(email))
+        if (repository.customerExistsByEmail(email))
         {
             throw new IllegalStateException("Email '"+email +"' is already registered. Please log in as existing customer.");
         }
-        Customer newCustomer = new Customer(name,email,district,street);
+        Customer newCustomer = new Customer(name,email, address);
         Customer saved = repository.saveCustomer(newCustomer);
         this.activeCustomer= saved;
         return saved;

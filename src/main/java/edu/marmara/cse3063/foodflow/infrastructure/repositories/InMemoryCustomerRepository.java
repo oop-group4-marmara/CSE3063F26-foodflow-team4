@@ -1,6 +1,6 @@
-package edu.marmara.cse3063.foodflow.infrastructure;
-import edu.marmara.cse3063.foodflow.domain.Customer;
-import edu.marmara.cse3063.foodflow.domain.CustomerRepository;
+package edu.marmara.cse3063.foodflow.infrastructure.repositories;
+import edu.marmara.cse3063.foodflow.domain.models.Customer;
+import edu.marmara.cse3063.foodflow.infrastructure.interfaces.ICustomerRepository;
 
 import java.util.Optional;
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 
-public class InMemoryCustomerRepository implements CustomerRepository
+public class InMemoryCustomerRepository implements ICustomerRepository
 {
     //store the users in a HashMap.
     private final Map<String,Customer> store = new ConcurrentHashMap<>();
