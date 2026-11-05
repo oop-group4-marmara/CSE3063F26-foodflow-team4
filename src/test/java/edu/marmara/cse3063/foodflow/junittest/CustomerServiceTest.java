@@ -49,7 +49,7 @@ public class CustomerServiceTest
             "'   ', email@test.com, District, Street"
     })
     @DisplayName("2. Empty Field Rejection: Fails if any parameter is null, empty, or blank")
-    void testEmptyFieldsRejection(String name, String email, String district , String street) {
+    void testEmptyFieldsRejection(String name, String email, String district , String street)  throws IllegalArgumentException{
         assertThrows(IllegalArgumentException.class,
                 () -> service.registerCustomer(name, email, new Address(district,street)));
     }
@@ -57,7 +57,7 @@ public class CustomerServiceTest
     @ParameterizedTest
     @ValueSource(strings = {"invalid-email", "plainaddress", "@missinguser.com", "user@.com", "user@domain"})
     @DisplayName("3. Invalid E-mail Format: Fails when email format is invalid")
-    void testInvalidEmailFormatRejection(String invalidEmail) {
+    void testInvalidEmailFormatRejection(String invalidEmail) throws IllegalArgumentException{
         assertThrows(IllegalArgumentException.class,
                 () -> service.registerCustomer("John Doe", invalidEmail, new Address("District", "Street")));
     }
