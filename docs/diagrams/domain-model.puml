@@ -4,16 +4,73 @@ hide circle
 hide empty methods
 skinparam classAttributeIconSize 0
 
-class .... {
+class Restaurant {
   name
-  ....
+  cuisine
   city
-  ilçe
+  district
+  deliveryFee
 }
-class ... {
+
+class MenuItem {
   name
+  category
   price
 }
-' TODO: add Customer, Cart, CartLine, Order, OrderLine, ...
-Restaurant "1" -- "1..*" MenuItem : offers >
+
+class Customer {
+  name
+  email {unique}
+}
+
+class Address <<value object>> {
+  district
+  street
+}
+
+class Cart {
+  /subtotal
+  /total
+}
+
+class CartLine {
+  quantity
+  /lineTotal
+}
+
+class Order {
+  orderNumber {unique}
+  status
+  paymentMethod
+  subtotal
+  total
+}
+
+class OrderLine {
+  itemName
+  unitPrice
+  quantity
+  lineTotal
+}
+
+Restaurant "1" -- "0..*" MenuItem : offers >
+Customer "1" *-- "1" Cart : maintains >
+Customer "0..*" -- "1" Address : registers >
+Cart "0..*" -- "0..1" Restaurant : selects >
+Cart "1" *-- "0..*" CartLine : contains >
+CartLine "0..*" -- "1" MenuItem : refers to >
+Customer "1" -- "0..*" Order : places >
+Restaurant "1" -- "0..*" Order : receives >
+Order "0..*" -- "1" Address : ships to >
+Order "1" *-- "1..*" OrderLine : records >
+
+' BR-1: MenuItem.price is positive. CartLine.quantity is a whole number in 1..20.
+' BR-2: A non-empty cart uses one restaurant. An empty cart has no restaurant.
+' BR-3: A cart has at most one line per item. Adding again increases its quantity.
+' BR-4: Placing an order requires a non-empty cart and a delivery address.
+' BR-5: Subtotal sums line totals. Total is subtotal plus delivery fee.
+' BR-6: Order numbers are unique and increasing within one application run.
+' BR-7: Capture item names, unit prices, quantities, fee and address at placement.
+' A successful placement clears the cart. The receipt is generated from the order.
+' BR-8: Customer.email contains "@" and is unique among customers.
 @enduml
