@@ -1,59 +1,52 @@
 package edu.marmara.cse3063.foodflow.domain.models;
 
 import java.util.Objects;
-import java.util.regex.Pattern;
 
-//throws IllegalArgumentException in Constructor in case of empty fields or wrong email pattern
 public class Customer
 {
-
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     private String name;
     private final String email;
     private Address address;
+    private final Cart cart = new Cart();
 
-    public Customer(String name, String email, Address address)
+    public Customer(String name, String email, Address address) throws Exception
     {
-        stringValidateNonEmpty(name,"Name Cannot Be Empty!");
-        stringValidateNonEmpty(email , "Email Cannot Be Empty!");
-        stringValidateNonEmpty(address.district() , "District Cannot Be Empty!");
-        stringValidateNonEmpty(address.street() , "Street Cannot Be Empty!");
-
-        String trimmedEmail = email.trim().toLowerCase();
-        if(!(EMAIL_PATTERN.matcher(trimmedEmail).matches()))
+        setName(name);
+        this.email = Objects.requireNonNull(email, "email");
+        setAddress(address);
+        if (!email.contains("@"))
         {
-            throw new IllegalArgumentException("Wrong Email Pattern : " + email);
-        }
-
-        this.name = name;
-        this.email = email.trim();
-        this.address = address;
-    }
-
-    private void stringValidateNonEmpty(String str, String errMessage)
-    {
-        if (str == null || str.trim().isEmpty())
-        {
-            throw new IllegalArgumentException(errMessage);
+            throw new Exception("Email must contain @.");
         }
     }
 
-    public String getName() { return this.name;}
-    public String getEmail() { return this.email;}
-    public Address getAddress() { return this.address;}
-
-    @Override
-    public boolean equals(Object o)
+    public String getName()
     {
-        if( this == o ) return true;
-        if(o == null || getClass() != o.getClass()) return false;
-
-        return Objects.equals(this.email, ((Customer) o).email);
+        return name;
     }
 
-    @Override
-    public int hashCode()
+    public final void setName(String name)
     {
-        return this.email.hashCode();
+        this.name = Objects.requireNonNull(name, "name");
+    }
+
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public Address getAddress()
+    {
+        return address;
+    }
+
+    public final void setAddress(Address address)
+    {
+        this.address = Objects.requireNonNull(address, "address");
+    }
+
+    public Cart getCart()
+    {
+        return cart;
     }
 }
