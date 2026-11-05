@@ -18,8 +18,7 @@ public class Restaurant
         this(id, name, cuisine, city, district, deliveryFee, new ArrayList<>());
     }
 
-    public Restaurant(String id, String name, String cuisine, String city, String district,
-                      double deliveryFee, ArrayList<MenuItem> menuItems)
+    public Restaurant(String id, String name, String cuisine, String city, String district, double deliveryFee, ArrayList<MenuItem> menuItems) //for creating a restaurant with a ready menu
     {
         this.id = requireText(id, "id");
         setName(name);
