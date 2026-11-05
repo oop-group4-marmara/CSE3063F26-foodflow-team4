@@ -54,8 +54,11 @@ public class CustomerService implements ICustomerService
 
         String normalizedEmail = email.trim().toLowerCase();
 
-        if (repository.customerExistsByEmail(normalizedEmail))
-        {
+        if (address == null) {
+            throw new IllegalArgumentException("Address can not be null");
+        }
+
+        if (repository.customerExistsByEmail(normalizedEmail)) {
             throw new IllegalStateException("Email: "+ normalizedEmail +"' is already registered. Please log in as existing customer.");
         }
         Customer newCustomer = new Customer(validName, normalizedEmail, address);
