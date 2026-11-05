@@ -25,11 +25,9 @@ Run all commands from the repository root.
 
 ## Current console flow
 
-The welcome menu lets you register with your name, e-mail, district and street, or continue with an existing e-mail. After identification, the customer menu displays your name and e-mail and lets you change customer or exit.
+Register or continue by e-mail, then browse restaurants and filter by cuisine or district. Filters accept case-insensitive partial text; blank fields apply no restriction.
 
-Enter `0` in a registration or sign-in field to return to the welcome menu. Invalid menu choices and customer validation errors display a message and allow another attempt. End-of-input exits normally.
-
-Customers are stored in memory for one application run. To try signing in, register, choose **Change customer**, then continue with the same e-mail. Restarting the application clears the records. Restaurant, cart and order menus will be connected in later changes.
+Customers remain in memory until exit. Restaurant data is loaded from `data/restaurants.json`.
 
 ## Project structure
 

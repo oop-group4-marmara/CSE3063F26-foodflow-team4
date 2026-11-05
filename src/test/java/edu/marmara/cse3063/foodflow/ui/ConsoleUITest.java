@@ -2,7 +2,9 @@ package edu.marmara.cse3063.foodflow.ui;
 
 import edu.marmara.cse3063.foodflow.application.dtos.CustomerDto;
 import edu.marmara.cse3063.foodflow.application.dtos.RegisterCustomerDto;
+import edu.marmara.cse3063.foodflow.application.dtos.RestaurantDto;
 import edu.marmara.cse3063.foodflow.application.interfaces.ICustomerService;
+import edu.marmara.cse3063.foodflow.application.interfaces.IRestaurantService;
 import edu.marmara.cse3063.foodflow.application.services.CustomerService;
 import edu.marmara.cse3063.foodflow.infrastructure.repositories.InMemoryCustomerRepository;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Stream;
@@ -41,7 +44,7 @@ class ConsoleUITest
     void completedRegistrationPassesFieldsToServiceAndOpensCustomerMenu()
     {
         RecordingCustomerService service = new RecordingCustomerService();
-        String output = run("1\nBob Smith\nbob@example.com\nKadıköy\nModa Street\n2\n0\n", service);
+        String output = run("1\nBob Smith\nbob@example.com\nKadıköy\nModa Street\n9\n0\n", service);
 
         assertEquals(1, service.registrationCalls);
         assertEquals("Bob Smith", service.registration.getName());
@@ -50,7 +53,7 @@ class ConsoleUITest
         assertEquals("Moda Street", service.registration.getStreet());
         assertTrue(output.contains("Customer: Bob Smith"));
         assertTrue(output.contains("E-mail: bob@example.com"));
-        assertTrue(output.contains("1. Change customer"));
+        assertTrue(output.contains("2. Change customer"));
         assertTrue(output.contains("Please enter one of the available options."));
     }
 
@@ -175,7 +178,7 @@ class ConsoleUITest
         InMemoryCustomerRepository repository = new InMemoryCustomerRepository();
         CustomerService service = new CustomerService(repository);
 
-        String output = run("1\nBob Smith\nbob@example.com\nKadıköy\nModa Street\n1\n2\nBOB@EXAMPLE.COM\n0\n", service);
+        String output = run("1\nBob Smith\nbob@example.com\nKadıköy\nModa Street\n2\n2\nBOB@EXAMPLE.COM\n0\n", service);
 
         assertEquals(2, occurrences(output, "Customer: Bob Smith"));
         assertEquals(2, occurrences(output, "1. Register a new customer"));
@@ -188,7 +191,7 @@ class ConsoleUITest
     void duplicateRegistrationDoesNotPreventLoggingIntoTheOriginalCustomer()
     {
         CustomerService service = new CustomerService(new InMemoryCustomerRepository());
-        String output = run("1\nBob Smith\nbob@example.com\nKadıköy\nModa Street\n1\n"
+        String output = run("1\nBob Smith\nbob@example.com\nKadıköy\nModa Street\n2\n"
                 + "1\nOther Customer\nBOB@EXAMPLE.COM\n"
                 + "2\nbob@example.com\n0\n", service);
 
@@ -223,7 +226,7 @@ class ConsoleUITest
         try (Scanner scanner = new Scanner(script);
              PrintStream output = new PrintStream(bytes, true, StandardCharsets.UTF_8))
         {
-            new ConsoleUI(service, new ConsoleInput(scanner, output), output).run();
+            new ConsoleUI(service, new EmptyRestaurantService(), new ConsoleInput(scanner, output), output).run();
         }
         return bytes.toString(StandardCharsets.UTF_8);
     }
@@ -277,6 +280,27 @@ class ConsoleUITest
         public void logout()
         {
             active = null;
+        }
+    }
+
+    private static final class EmptyRestaurantService implements IRestaurantService
+    {
+        @Override
+        public ArrayList<RestaurantDto> getAllRestaurants()
+        {
+            return new ArrayList<>();
+        }
+
+        @Override
+        public ArrayList<RestaurantDto> filterRestaurants(String cuisine, String district)
+        {
+            return new ArrayList<>();
+        }
+
+        @Override
+        public RestaurantDto getRestaurantById(String id)
+        {
+            return null;
         }
     }
 }
