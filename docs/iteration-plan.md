@@ -4,9 +4,11 @@
 *One sentence.*
 
 ## Planned work
-| ID | Item (feature / artifact)        | Owner     | Reviewer          | Estimate (h) | Status    |
-|----|----------------------------------|-----------|-------------------|--------------|-----------|
-| #0 | Setup architecture and projects. | Cihangir  | Ibrahim, Ali Eren | 3            | In Review |
+| ID | Item (feature / artifact)         | Owner     | Reviewer          | Estimate (h) | Status    |
+|----|-----------------------------------|-----------|-------------------|--------------|-----------|
+| #0 | Setup architecture and projects.  | Cihangir  | Ibrahim, Ali Eren | 3            | In Review |
+| #30 | Add glossary                     | Cihangir  | Mesut, Çağatay    | 2            | Done      |
+| #35 | Add domain model                 | Cihangir  | Çağatay, İbrahim  | 5            | In Review |
 
 ## Top risks
 | # | Risk | Likelihood (L/M/H) | Impact (L/M/H) | Mitigation |
