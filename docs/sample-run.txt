@@ -1,0 +1,9 @@
+FoodFlow - CSE3063 term project
+Replace this with your console UI (Iteration 1).
+Name Cannot Be Empty!
+Wrong Email Pattern : aligmail.com
+Email Cannot Be Empty!
+District Cannot Be Empty!
+Street Cannot Be Empty!
+ali
+
