@@ -25,6 +25,15 @@
             <version>2.13.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
         <!-- JUnit Test -->
         <dependency>
             <groupId>org.junit</groupId>
@@ -33,13 +42,7 @@
             <type>pom</type>
             <scope>import</scope>
         </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>
