@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class Restaurant
 {
+    private final String id;
     private String name;
     private String cuisine;
     private String city;
@@ -12,23 +13,30 @@ public class Restaurant
     private double deliveryFee;
     private final ArrayList<MenuItem> menuItems;
 
-    public Restaurant(String name, String cuisine, String city, String district, double deliveryFee)
+    public Restaurant(String id, String name, String cuisine, String city, String district, double deliveryFee)
     {
-        this(name, cuisine, city, district, deliveryFee, new ArrayList<>());
+        this(id, name, cuisine, city, district, deliveryFee, new ArrayList<>());
     }
 
-    public Restaurant(String name, String cuisine, String city, String district, double deliveryFee, ArrayList<MenuItem> menuItems) //for creating a restaurant with a ready menu
+    public Restaurant(String id, String name, String cuisine, String city, String district,
+                      double deliveryFee, ArrayList<MenuItem> menuItems)
     {
+        this.id = requireText(id, "id");
         setName(name);
         setCuisine(cuisine);
         setCity(city);
         setDistrict(district);
         setDeliveryFee(deliveryFee);
-        this.menuItems = new ArrayList<>(menuItems);
+        this.menuItems = new ArrayList<>(Objects.requireNonNull(menuItems, "menuItems"));
         for (MenuItem menuItem : this.menuItems)
         {
             Objects.requireNonNull(menuItem, "menuItem");
         }
+    }
+
+    public String getId()
+    {
+        return id;
     }
 
     public String getName()
@@ -38,7 +46,7 @@ public class Restaurant
 
     public final void setName(String name)
     {
-        this.name = Objects.requireNonNull(name, "name");
+        this.name = requireText(name, "name");
     }
 
     public String getCuisine()
@@ -48,9 +56,10 @@ public class Restaurant
 
     public final void setCuisine(String cuisine)
     {
-        this.cuisine = Objects.requireNonNull(cuisine, "cuisine");
+        this.cuisine = requireText(cuisine, "cuisine");
     }
 
+    /** Returns null when the restaurant's city is not supplied. */
     public String getCity()
     {
         return city;
@@ -58,7 +67,7 @@ public class Restaurant
 
     public final void setCity(String city)
     {
-        this.city = Objects.requireNonNull(city, "city");
+        this.city = city == null ? null : requireText(city, "city");
     }
 
     public String getDistrict()
@@ -68,7 +77,7 @@ public class Restaurant
 
     public final void setDistrict(String district)
     {
-        this.district = Objects.requireNonNull(district, "district");
+        this.district = requireText(district, "district");
     }
 
     public double getDeliveryFee()
@@ -78,6 +87,10 @@ public class Restaurant
 
     public final void setDeliveryFee(double deliveryFee)
     {
+        if (!Double.isFinite(deliveryFee) || deliveryFee < 0.0)
+        {
+            throw new IllegalArgumentException("Delivery fee must be finite and non-negative.");
+        }
         this.deliveryFee = deliveryFee;
     }
 
@@ -89,5 +102,15 @@ public class Restaurant
     public void addMenuItem(MenuItem menuItem)
     {
         menuItems.add(Objects.requireNonNull(menuItem, "menuItem"));
+    }
+
+    private static String requireText(String value, String fieldName)
+    {
+        Objects.requireNonNull(value, fieldName);
+        if (value.isBlank())
+        {
+            throw new IllegalArgumentException(fieldName + " must not be blank.");
+        }
+        return value;
     }
 }
