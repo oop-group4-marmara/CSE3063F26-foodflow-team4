@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -40,7 +41,6 @@ public class CustomerServiceTest
         assertEquals(customer, service.getActiveCustomer().get());
     }
 
-    @ParameterizedTest
     @CsvSource({
             "'', email@test.com, District, Street",
             "Name, '', District, Street",
@@ -48,20 +48,22 @@ public class CustomerServiceTest
             "Name, email@test.com, District, ''",
             "'   ', email@test.com, District, Street"
     })
-    @DisplayName("2. Empty Field Rejection: Fails if any parameter is null, empty, or blank")
-    void testEmptyFieldsRejection(String name, String email, String district , String street)  throws IllegalArgumentException{
-        /*assertThrows(IllegalArgumentException.class,
-                () -> service.registerCustomer(name, email, new Address(district,street)));
-                ---- hotfix ----*/
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"   "})
+    @DisplayName("Empty or blank email is rejected")
+    void testEmptyEmailRejection(String email) {
+        assertThrows(IllegalArgumentException.class,
+                () -> service.registerCustomer("John Doe", email, new Address("District", "Street")));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"invalid-email", "plainaddress", "@missinguser.com", "user@.com", "user@domain"})
-    @DisplayName("3. Invalid E-mail Format: Fails when email format is invalid")
-    void testInvalidEmailFormatRejection(String invalidEmail) throws IllegalArgumentException{
-        /*assertThrows(IllegalArgumentException.class,
-                () -> service.registerCustomer("John Doe", invalidEmail, new Address("District", "Street")));
-                ---- hotfix ----*/
+    @NullAndEmptySource
+    @ValueSource(strings = {"   "})
+    @DisplayName("Empty or blank name is rejected")
+    void testEmptyNameRejection(String name) {
+        assertThrows(IllegalArgumentException.class,
+                () -> service.registerCustomer(name, "user@example.com", new Address("District", "Street")));
     }
     @Test
     @DisplayName("4. Duplicate E-mail Prevention: Rejects registration with existing email (case-insensitive)")
@@ -72,6 +74,7 @@ public class CustomerServiceTest
         assertThrows(IllegalStateException.class,
                 () -> service.registerCustomer("Second User", "USER@EXAMPLE.COM", new Address("District2", "Street2")));
     }
+
     @Test
     @DisplayName("5. Existing Customer Login: Sets active customer using email case-insensitively")
     void testExistingCustomerLogin() throws Exception {
@@ -98,5 +101,4 @@ public class CustomerServiceTest
 
         assertTrue(service.getActiveCustomer().isEmpty());
     }
-
 }

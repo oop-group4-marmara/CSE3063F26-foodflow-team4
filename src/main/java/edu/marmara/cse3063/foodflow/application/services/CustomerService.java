@@ -6,11 +6,39 @@ import edu.marmara.cse3063.foodflow.domain.models.Customer;
 import edu.marmara.cse3063.foodflow.infrastructure.interfaces.ICustomerRepository;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class CustomerService implements ICustomerService
 {
     private final ICustomerRepository repository;
     private Customer activeCustomer;
+
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*\\.[A-Za-z]{2,}$");
+
+    private static final int NAME_MIN_LENGTH = 2;
+    private static final int NAME_MAX_LENGTH = 50;
+
+    private static final Pattern NAME_PATTERN =
+            Pattern.compile("^\\p{L}[\\p{L} '.-]*$");
+
+    private String validateName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty.");
+        }
+
+        String normalized = name.trim().replaceAll("\\s+", " ");
+
+        if (normalized.length() < NAME_MIN_LENGTH || normalized.length() > NAME_MAX_LENGTH) {
+            throw new IllegalArgumentException(
+                    "Name must be between " + NAME_MIN_LENGTH + " and " + NAME_MAX_LENGTH + " characters.");
+        }
+        if (!NAME_PATTERN.matcher(normalized).matches()) {
+            throw new IllegalArgumentException(
+                    "Name can only contain letters, spaces, apostrophes, dots and hyphens: " + name);
+        }
+        return normalized;
+    }
 
     public CustomerService(ICustomerRepository repo)
     {
@@ -18,11 +46,19 @@ public class CustomerService implements ICustomerService
     }
 
     public Customer registerCustomer(String name, String email, Address address) throws Exception {
-        if (repository.customerExistsByEmail(email))
-        {
-            throw new IllegalStateException("Email '"+email +"' is already registered. Please log in as existing customer.");
+        String validName = validateName(name);
+
+        if (!isValidEmail(email)) {
+            throw new IllegalArgumentException("Email is not in right format " + email);
         }
-        Customer newCustomer = new Customer(name,email, address);
+
+        String normalizedEmail = email.trim().toLowerCase();
+
+        if (repository.customerExistsByEmail(normalizedEmail))
+        {
+            throw new IllegalStateException("Email: "+ normalizedEmail +"' is already registered. Please log in as existing customer.");
+        }
+        Customer newCustomer = new Customer(validName, normalizedEmail, address);
         Customer saved = repository.saveCustomer(newCustomer);
         this.activeCustomer= saved;
         return saved;
@@ -51,7 +87,9 @@ public class CustomerService implements ICustomerService
         return Optional.ofNullable(activeCustomer);
     }
 
-
-
-
+    private boolean isValidEmail(String email) {
+        return email != null
+                && !email.trim().isEmpty()
+                && EMAIL_PATTERN.matcher(email.trim()).matches();
+    }
 }
