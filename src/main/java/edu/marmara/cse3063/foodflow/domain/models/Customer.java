@@ -1,4 +1,4 @@
-package edu.marmara.cse3063.foodflow.domain;
+package edu.marmara.cse3063.foodflow.domain.models;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -8,17 +8,16 @@ public class Customer
 {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
-    private final String name;
+    private String name;
     private final String email;
-    private final String district;
-    private final String street;
+    private Address address;
 
-    public Customer(String name , String email, String district , String street)
+    public Customer(String name, String email, Address address)
     {
         stringValidateNonEmpty(name,"Name Cannot Be Empty!");
         stringValidateNonEmpty(email , "Email Cannot Be Empty!");
-        stringValidateNonEmpty(district , "District Cannot Be Empty!");
-        stringValidateNonEmpty(street , "Street Cannot Be Empty!");
+        stringValidateNonEmpty(address.district() , "District Cannot Be Empty!");
+        stringValidateNonEmpty(address.street() , "Street Cannot Be Empty!");
 
         String trimmedEmail = email.trim().toLowerCase();
         if(!(EMAIL_PATTERN.matcher(trimmedEmail).matches()))
@@ -28,13 +27,12 @@ public class Customer
 
         this.name = name;
         this.email = email.trim();
-        this.district = district;
-        this.street = street;
+        this.address = address;
     }
 
-    private void stringValidateNonEmpty(String str , String errMessage)
+    private void stringValidateNonEmpty(String str, String errMessage)
     {
-        if ( str == null || str.trim().isEmpty())
+        if (str == null || str.trim().isEmpty())
         {
             throw new IllegalArgumentException(errMessage);
         }
@@ -42,11 +40,10 @@ public class Customer
 
     public String getName() { return this.name;}
     public String getEmail() { return this.email;}
-    public String getDistrict() { return this.district;}
-    public String getStreet() { return this.street;}
+    public Address getAddress() { return this.address;}
 
     @Override
-    public boolean equals(Object o )
+    public boolean equals(Object o)
     {
         if( this == o ) return true;
         if(o == null || getClass() != o.getClass()) return false;
@@ -59,5 +56,4 @@ public class Customer
     {
         return this.email.hashCode();
     }
-
 }
