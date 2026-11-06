@@ -3,6 +3,7 @@ package edu.marmara.cse3063.foodflow.infrastructure.repositories;
 import edu.marmara.cse3063.foodflow.domain.models.Order;
 import edu.marmara.cse3063.foodflow.infrastructure.interfaces.IOrderRepository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -30,5 +31,15 @@ public class InMemoryOrderRepository implements IOrderRepository
         }
         store.put(number, order);
         return order;
+    }
+
+    @Override
+    public List<Order> findOrdersByCustomerEmail(String email)
+    {
+        Objects.requireNonNull(email, "email");
+        String key = email.trim();
+        return store.values().stream()
+                .filter(order -> order.getCustomer().getEmail().equalsIgnoreCase(key))
+                .toList();
     }
 }

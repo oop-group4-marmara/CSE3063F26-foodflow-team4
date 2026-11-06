@@ -3,6 +3,8 @@ package edu.marmara.cse3063.foodflow.application.interfaces;
 import edu.marmara.cse3063.foodflow.application.dtos.OrderDto;
 import edu.marmara.cse3063.foodflow.application.dtos.OrderPreviewDto;
 
+import java.util.List;
+
 /** UC6 Place Order. */
 public interface IOrderService
 {
@@ -11,4 +13,7 @@ public interface IOrderService
 
     /** Places the customer's cart as a cash-on-delivery order, empties the cart and returns the receipt. */
     OrderDto placeOrder(String customerEmail);
+
+    /** Returns the customer's placed orders, oldest first. */
+    List<OrderDto> getCustomerOrders(String customerEmail);
 }

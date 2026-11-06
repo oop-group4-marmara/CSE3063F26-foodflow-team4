@@ -77,6 +77,18 @@ public class OrderService implements IOrderService
         return toDto(order);
     }
 
+    @Override
+    public List<OrderDto> getCustomerOrders(String customerEmail)
+    {
+        Customer customer = findCustomer(customerEmail);
+        List<OrderDto> orders = new ArrayList<>();
+        for (Order order : orderRepository.findOrdersByCustomerEmail(customer.getEmail()))
+        {
+            orders.add(toDto(order));
+        }
+        return orders;
+    }
+
     private Customer findCustomer(String customerEmail)
     {
         if (customerEmail == null || customerEmail.isBlank())

@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class InMemoryCustomerRepository implements ICustomerRepository
 {
     //store the users in a HashMap.
-    private final Map<String,Customer> store = new ConcurrentHashMap<>();
+    private final Map<String, Customer> store = new ConcurrentHashMap<>();
 
     @Override
     public Customer saveCustomer(Customer customer)
