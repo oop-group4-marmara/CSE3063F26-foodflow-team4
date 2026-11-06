@@ -4,6 +4,7 @@ import edu.marmara.cse3063.foodflow.infrastructure.interfaces.ICustomerRepositor
 
 import java.util.Optional;
 import java.util.Map;
+import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -16,19 +17,19 @@ public class InMemoryCustomerRepository implements ICustomerRepository
     @Override
     public Customer saveCustomer(Customer customer)
     {
-        store.put(customer.getEmail().trim().toLowerCase(),customer);
+        store.put(customer.getEmail().trim().toLowerCase(Locale.ROOT),customer);
         return customer;
     }
     @Override
     public Optional<Customer> findCustomerByEmail(String email)
     {
         if(email==null) return Optional.empty();
-        return Optional.ofNullable(store.get(email.trim().toLowerCase()));
+        return Optional.ofNullable(store.get(email.trim().toLowerCase(Locale.ROOT)));
     }
     @Override
     public boolean customerExistsByEmail(String email)
     {
         if(email==null) return false;
-        return store.containsKey(email.trim().toLowerCase());
+        return store.containsKey(email.trim().toLowerCase(Locale.ROOT));
     }
 }

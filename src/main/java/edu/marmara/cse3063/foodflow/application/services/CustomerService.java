@@ -1,10 +1,14 @@
 package edu.marmara.cse3063.foodflow.application.services;
 
+import edu.marmara.cse3063.foodflow.application.dtos.CustomerDto;
+import edu.marmara.cse3063.foodflow.application.dtos.RegisterCustomerDto;
 import edu.marmara.cse3063.foodflow.application.interfaces.ICustomerService;
 import edu.marmara.cse3063.foodflow.domain.models.Address;
 import edu.marmara.cse3063.foodflow.domain.models.Customer;
 import edu.marmara.cse3063.foodflow.infrastructure.interfaces.ICustomerRepository;
 
+import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -42,52 +46,89 @@ public class CustomerService implements ICustomerService
 
     public CustomerService(ICustomerRepository repo)
     {
-        this.repository = repo;
+        this.repository = Objects.requireNonNull(repo, "repository");
     }
 
-    public Customer registerCustomer(String name, String email, Address address) throws Exception {
-        String validName = validateName(name);
-
-        if (!isValidEmail(email)) {
-            throw new IllegalArgumentException("Email is not in right format " + email);
+    @Override
+    public CustomerDto registerCustomer(RegisterCustomerDto request) {
+        if (request == null) {
+            throw new IllegalArgumentException("Registration details cannot be null.");
         }
 
-        String normalizedEmail = email.trim().toLowerCase();
+        String validName = validateName(request.getName());
+        String email = request.getEmail();
+        validateRegistrationEmail(email);
 
-        if (address == null) {
-            throw new IllegalArgumentException("Address can not be null");
-        }
-
-        if (repository.customerExistsByEmail(normalizedEmail)) {
-            throw new IllegalStateException("Email: "+ normalizedEmail +"' is already registered. Please log in as existing customer.");
-        }
-        Customer newCustomer = new Customer(validName, normalizedEmail, address);
+        String normalizedEmail = email.trim().toLowerCase(Locale.ROOT);
+        Address address = new Address(request.getDistrict(), request.getStreet());
+        Customer newCustomer = createCustomer(validName, normalizedEmail, address);
         Customer saved = repository.saveCustomer(newCustomer);
-        this.activeCustomer= saved;
-        return saved;
+        this.activeCustomer = saved;
+        return toDto(saved);
     }
 
-    public Customer loginExisting(String email)
+    @Override
+    public void validateRegistrationEmail(String email)
+    {
+        if (!isValidEmail(email)) {
+            throw new IllegalArgumentException("E-mail is not in the correct format: " + email);
+        }
+
+        String normalizedEmail = email.trim().toLowerCase(Locale.ROOT);
+        if (repository.customerExistsByEmail(normalizedEmail)) {
+            throw new IllegalStateException("E-mail '" + normalizedEmail
+                    + "' is already registered. Please continue as an existing customer.");
+        }
+    }
+
+    @Override
+    public CustomerDto loginExisting(String email)
     {
         if(email==null || email.trim().isEmpty())
         {
-            throw new IllegalArgumentException("E-mail Cannot Be Empty.");
+            throw new IllegalArgumentException("E-mail cannot be empty.");
         }
 
-        Optional<Customer> optCustomer = repository.findCustomerByEmail(email);
+        String normalizedEmail = email.trim().toLowerCase(Locale.ROOT);
+        Optional<Customer> optCustomer = repository.findCustomerByEmail(normalizedEmail);
         if(optCustomer.isEmpty())
         {
-            throw new IllegalArgumentException("Customer With E-mail '" + email +"' not found.");
+            throw new IllegalArgumentException("Customer with e-mail '" + normalizedEmail + "' not found.");
         }
 
         Customer customer = optCustomer.get();
-        activeCustomer=customer;
-        return customer;
+        activeCustomer = customer;
+        return toDto(customer);
     }
 
-    public Optional<Customer> getActiveCustomer()
+    @Override
+    public Optional<CustomerDto> getActiveCustomer()
     {
-        return Optional.ofNullable(activeCustomer);
+        return Optional.ofNullable(activeCustomer).map(CustomerService::toDto);
+    }
+
+    @Override
+    public void logout()
+    {
+        activeCustomer = null;
+    }
+
+    private static Customer createCustomer(String name, String email, Address address)
+    {
+        try {
+            return new Customer(name, email, address);
+        } catch (RuntimeException exception) {
+            throw exception;
+        } catch (Exception exception) {
+            // Customer currently reports its e-mail rule with a checked exception.
+            throw new IllegalArgumentException(exception.getMessage(), exception);
+        }
+    }
+
+    private static CustomerDto toDto(Customer customer)
+    {
+        Address address = customer.getAddress();
+        return new CustomerDto(customer.getName(), customer.getEmail(), address.district(), address.street());
     }
 
     private boolean isValidEmail(String email) {

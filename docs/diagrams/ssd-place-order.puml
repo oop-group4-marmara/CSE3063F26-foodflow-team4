@@ -1,8 +1,66 @@
-@startuml
-' System sequence diagram: UC Place Order, main success scenario
+@startuml ssd-place-order
+
+title FoodFlow - System Sequence Diagram (Iteration 1)
+
+hide footbox
+
 actor Customer
 participant ":FoodFlow" as System
-Customer -> System : listRestaurants(cuisine?, district?)
-System --> Customer : restaurants
-' TODO: complete with the system operations of your use case
+
+== Identify the Customer ==
+
+Customer -> System : registerCustomer(name, email, address)
+activate System
+System --> Customer : name, email, delivery address
+deactivate System
+
+== Browse and filter ==
+
+Customer -> System : listRestaurants()
+activate System
+System --> Customer : name, cuisine, district and delivery fee of each restaurant
+deactivate System
+
+Customer -> System : filterRestaurants(cuisine, district)
+activate System
+System --> Customer : name, cuisine, district and delivery fee of the matching restaurants
+deactivate System
+
+== View a menu ==
+
+Customer -> System : viewMenu(restaurantId)
+activate System
+System --> Customer : name and price of each item, grouped by category, and the delivery fee
+deactivate System
+
+== Manage the cart ==
+
+Customer -> System : addItem(itemId, quantity)
+activate System
+System --> Customer : line total, subtotal, delivery fee, total
+deactivate System
+
+Customer -> System : changeQuantity(itemId, newQuantity)
+activate System
+System --> Customer : line total, subtotal, total
+deactivate System
+
+Customer -> System : removeItem(itemId)
+activate System
+System --> Customer : subtotal, delivery fee, total
+deactivate System
+
+Customer -> System : viewCart()
+activate System
+System --> Customer : item name, unit price, quantity and line total for each line,\nsubtotal, delivery fee, total
+deactivate System
+
+== Place the order ==
+
+Customer -> System : placeOrder()
+activate System
+System --> Customer : order lines, subtotal, delivery fee, total
+System --> Customer : order number, status, restaurant, each order line with its line total,\nsubtotal, delivery fee, total, delivery address, payment method
+deactivate System
+
 @enduml
