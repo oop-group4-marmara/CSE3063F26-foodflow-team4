@@ -119,6 +119,9 @@ class CartServiceTest {
         CartDto result = cartService.removeItem("R01-01", cart);
 
         assertTrue(result.getLines().isEmpty());
+        assertNull(cart.getRestaurant());
+        assertEquals(0.0, result.getDeliveryFee());
+        assertEquals(0.0, result.getTotal());
     }
 
     // BR-1
@@ -137,6 +140,28 @@ class CartServiceTest {
         CartDto result = cartService.changeQuantity("R01-01", cart, 0);
 
         assertTrue(result.getLines().isEmpty());
+        assertNull(cart.getRestaurant());
+        assertEquals(0.0, result.getTotal());
+    }
+
+    // BR-2
+    @Test
+    void testEmptiedCartAcceptsAnotherRestaurant() throws Exception {
+        cartService.addItem("R01-01", "R01", cart, 1);
+        cartService.removeItem("R01-01", cart);
+        CartDto result = cartService.addItem("R02-01", "R02", cart, 1);
+
+        assertEquals("Margherita", result.getLines().getFirst().getItemName());
+        assertEquals(40.0, result.getDeliveryFee());
+    }
+
+    @Test
+    void testChangeQuantityOfMissingItemIsRefused() throws Exception {
+        cartService.addItem("R01-01", "R01", cart, 1);
+
+        assertThrows(Exception.class, () -> cartService.changeQuantity("R01-02", cart, 0));
+        assertThrows(Exception.class, () -> cartService.changeQuantity("R01-02", cart, 3));
+        assertEquals(1, cart.getLines().size());
     }
 
     // BR-1

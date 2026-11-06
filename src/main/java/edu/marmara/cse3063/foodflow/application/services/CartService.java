@@ -30,6 +30,12 @@ public class CartService implements ICartService {
         return null;
     }
 
+    //an empty cart belongs to no restaurant, so its total must not include a delivery fee
+    private void deleteLine(Cart cart, CartLine line) {
+        cart.deleteCartLine(line);
+        if (cart.getLines().isEmpty()) cart.emptyCart();
+    }
+
     private CartDto toDto(Cart cart) {
         ArrayList<CartLineDto> dtoList = new ArrayList<>();
         for (CartLine line : cart.getLines()) {
@@ -48,7 +54,7 @@ public class CartService implements ICartService {
     public CartDto addItem(String itemId, String restaurantId, Cart cart, int quantity) throws Exception {
         if (cart == null) throw new IllegalArgumentException("Cart can't be null!");
         if (itemId == null || itemId.isBlank()) throw new IllegalArgumentException("Item Id can't be null!");
-        if (restaurantId == null || restaurantId.isBlank()) throw new IllegalArgumentException("RestaurantvId can't be null!");
+        if (restaurantId == null || restaurantId.isBlank()) throw new IllegalArgumentException("Restaurant Id can't be null!");
 
         Restaurant restaurant = restaurantRepository.getRestaurantById(restaurantId);
         if (restaurant == null) throw new Exception("Restaurant doesn't exist!");
@@ -99,15 +105,10 @@ public class CartService implements ICartService {
 
 
         CartLine line = findLine(cart, itemId);
+        if (line == null) throw new Exception("Item not found in cart!");
 
-        if (newQuantity == 0) {
-            if (line != null) cart.deleteCartLine(line);
-        }
-
-        else {
-            if (line != null) line.setQuantity(newQuantity);
-            else throw new Exception("Item not found in cart!");
-        }
+        if (newQuantity == 0) deleteLine(cart, line);
+        else line.setQuantity(newQuantity);
 
         return toDto(cart);
     }
@@ -122,7 +123,7 @@ public class CartService implements ICartService {
 
         int currentQuantity = line.getQuantity();
         if (currentQuantity <= 1) {
-            cart.deleteCartLine(line);
+            deleteLine(cart, line);
         }
 
         else line.setQuantity(currentQuantity - 1);
