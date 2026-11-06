@@ -23,20 +23,14 @@ public class OrderService implements IOrderService {
     public List<OrderDto> getCurrentCustomerOrders() {
         Optional<Customer> currentCustomer = customerService.getActiveCustomer();
 
-        if (currentCustomer.isEmpty()){
-            throw new IllegalArgumentException("Current customer is null");
+        if (currentCustomer.isEmpty()) {
+            throw new IllegalArgumentException("Please register or log in first.");
         }
 
         String email = currentCustomer.get().getEmail();
 
-        List<Order> customerOrders = orderRepository.getOrders(email);
-
-        List<OrderDto> orderDtoList = List.of();
-
-        for (Order customerOrder : customerOrders) {
-            orderDtoList.add(OrderDto.from(customerOrder));
-        }
-
-        return orderDtoList;
+        return orderRepository.getOrders(email).stream()
+                .map(OrderDto::from)
+                .toList();
     }
 }
