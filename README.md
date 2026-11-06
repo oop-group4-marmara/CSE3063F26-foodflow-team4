@@ -25,7 +25,7 @@ Run all commands from the repository root.
 
 ## Current console flow
 
-Register or continue by e-mail, then browse restaurants and filter by cuisine or district. Filters accept case-insensitive partial text; blank fields apply no restriction.
+Register or continue by e-mail, then browse restaurants and filter by cuisine or district. Filters accept case-insensitive partial text; blank fields apply no restriction. Open a restaurant's menu to add items to the cart, change quantities or remove items under "View cart", place the order (cash on delivery) and list it under "My orders". See [docs/sample-run.txt](docs/sample-run.txt) for a full session.
 
 Customers remain in memory until exit. Restaurant data is loaded from `data/restaurants.json`.
 

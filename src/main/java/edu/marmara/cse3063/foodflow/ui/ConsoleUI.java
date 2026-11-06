@@ -1,5 +1,7 @@
 package edu.marmara.cse3063.foodflow.ui;
 
+import edu.marmara.cse3063.foodflow.application.dtos.CartDto;
+import edu.marmara.cse3063.foodflow.application.dtos.CartLineDto;
 import edu.marmara.cse3063.foodflow.application.dtos.CustomerDto;
 import edu.marmara.cse3063.foodflow.application.dtos.MenuDto;
 import edu.marmara.cse3063.foodflow.application.dtos.MenuItemDto;
@@ -8,6 +10,7 @@ import edu.marmara.cse3063.foodflow.application.dtos.OrderLineDto;
 import edu.marmara.cse3063.foodflow.application.dtos.OrderPreviewDto;
 import edu.marmara.cse3063.foodflow.application.dtos.RegisterCustomerDto;
 import edu.marmara.cse3063.foodflow.application.dtos.RestaurantDto;
+import edu.marmara.cse3063.foodflow.application.interfaces.ICartService;
 import edu.marmara.cse3063.foodflow.application.interfaces.ICustomerService;
 import edu.marmara.cse3063.foodflow.application.interfaces.IOrderService;
 import edu.marmara.cse3063.foodflow.application.interfaces.IRestaurantService;
@@ -25,15 +28,17 @@ public final class ConsoleUI
 {
     private final ICustomerService customerService;
     private final IRestaurantService restaurantService;
+    private final ICartService cartService;
     private final IOrderService orderService;
     private final ConsoleInput input;
     private final PrintStream output;
 
     public ConsoleUI(ICustomerService customerService, IRestaurantService restaurantService,
-                     IOrderService orderService, ConsoleInput input, PrintStream output)
+                     ICartService cartService, IOrderService orderService, ConsoleInput input, PrintStream output)
     {
         this.customerService = Objects.requireNonNull(customerService, "customerService");
         this.restaurantService = Objects.requireNonNull(restaurantService, "restaurantService");
+        this.cartService = Objects.requireNonNull(cartService, "cartService");
         this.orderService = Objects.requireNonNull(orderService, "orderService");
         this.input = Objects.requireNonNull(input, "input");
         this.output = Objects.requireNonNull(output, "output");
@@ -80,21 +85,32 @@ public final class ConsoleUI
         output.println("1. Browse restaurants");
         output.println("2. Change customer");
         output.println("3. Place order");
+        output.println("4. View cart");
+        output.println("5. My orders");
         output.println("0. Exit");
         output.println();
 
-        OptionalInt choice = input.readChoice("Your choice: ", 0, 1, 2, 3);
+        OptionalInt choice = input.readChoice("Your choice: ", 0, 1, 2, 3, 4, 5);
         if (choice.isEmpty() || choice.getAsInt() == 0)
         {
             return false;
         }
         if (choice.getAsInt() == 1)
         {
-            return browseRestaurants();
+            return browseRestaurants(customer);
         }
         if (choice.getAsInt() == 3)
         {
             return placeOrder(customer);
+        }
+        if (choice.getAsInt() == 4)
+        {
+            return manageCart(customer);
+        }
+        if (choice.getAsInt() == 5)
+        {
+            showMyOrders(customer);
+            return true;
         }
         customerService.logout();
         return true;
@@ -182,7 +198,7 @@ public final class ConsoleUI
         return paymentMethod.equals("CASH_ON_DELIVERY") ? "Cash on delivery" : paymentMethod;
     }
 
-    private boolean browseRestaurants()
+    private boolean browseRestaurants(CustomerDto customer)
     {
         String cuisine = "";
         String district = "";
@@ -222,7 +238,7 @@ public final class ConsoleUI
             }
             if (choice.getAsInt() == 3)
             {
-                if (!viewMenu())
+                if (!viewMenu(customer))
                 {
                     return false;
                 }
@@ -268,7 +284,7 @@ public final class ConsoleUI
     }
 
     /** UC4: asks for a restaurant and prints its menu; an unknown ID is reported and asked again (BR-9). */
-    private boolean viewMenu()
+    private boolean viewMenu(CustomerDto customer)
     {
         output.println("Enter 0 to cancel.");
         Optional<String> restaurantId = input.readLine("Restaurant ID: ");
@@ -281,15 +297,206 @@ public final class ConsoleUI
             return true;
         }
 
+        MenuDto menu;
         try
         {
-            printMenu(restaurantService.viewMenu(restaurantId.get()));
+            menu = restaurantService.viewMenu(restaurantId.get());
         }
         catch (IllegalArgumentException exception)
         {
             output.println("Error: " + exception.getMessage());
+            return true;
+        }
+
+        printMenu(menu);
+        while (true)
+        {
+            output.println();
+            output.println("1. Add an item to the cart");
+            output.println("0. Back");
+            output.println();
+
+            OptionalInt choice = input.readChoice("Your choice: ", 0, 1);
+            if (choice.isEmpty())
+            {
+                return false;
+            }
+            if (choice.getAsInt() == 0)
+            {
+                return true;
+            }
+            if (!addToCart(customer, menu))
+            {
+                return false;
+            }
+        }
+    }
+
+    /** UC5: adds a menu item from the shown menu; refused additions leave the cart unchanged (BR-1, BR-2). */
+    private boolean addToCart(CustomerDto customer, MenuDto menu)
+    {
+        output.println("Enter 0 to cancel.");
+        Optional<String> itemId = input.readLine("Item ID: ");
+        if (itemId.isEmpty())
+        {
+            return false;
+        }
+        if (itemId.get().strip().equals("0"))
+        {
+            return true;
+        }
+        Optional<String> quantity = input.readLine("Quantity: ");
+        if (quantity.isEmpty())
+        {
+            return false;
+        }
+        if (quantity.get().strip().equals("0"))
+        {
+            return true;
+        }
+
+        try
+        {
+            CartDto cart = cartService.addToCart(customer.getEmail(), menu.getRestaurantId(), itemId.get(),
+                    parseQuantity(quantity.get()));
+            output.println("Added to the cart.");
+            printCart(cart);
+        }
+        catch (IllegalArgumentException | IllegalStateException exception)
+        {
+            output.println("Error: " + exception.getMessage());
         }
         return true;
+    }
+
+    /** UC5: shows the cart and lets the customer change a quantity, remove a line or empty the cart. */
+    private boolean manageCart(CustomerDto customer)
+    {
+        while (true)
+        {
+            output.println();
+            output.println("Cart");
+            CartDto cart = cartService.getCart(customer.getEmail());
+            printCart(cart);
+            if (cart.getLines().isEmpty())
+            {
+                return true;
+            }
+            output.println();
+            output.println("1. Change a quantity");
+            output.println("2. Remove an item");
+            output.println("3. Empty the cart");
+            output.println("0. Back");
+            output.println();
+
+            OptionalInt choice = input.readChoice("Your choice: ", 0, 1, 2, 3);
+            if (choice.isEmpty())
+            {
+                return false;
+            }
+            if (choice.getAsInt() == 0)
+            {
+                return true;
+            }
+            if (choice.getAsInt() == 3)
+            {
+                cartService.emptyCart(customer.getEmail());
+                output.println("The cart is now empty.");
+                continue;
+            }
+
+            output.println("Enter 0 to cancel.");
+            Optional<String> itemId = input.readLine("Item ID: ");
+            if (itemId.isEmpty())
+            {
+                return false;
+            }
+            if (itemId.get().strip().equals("0"))
+            {
+                continue;
+            }
+            try
+            {
+                if (choice.getAsInt() == 2)
+                {
+                    cartService.removeFromCart(customer.getEmail(), itemId.get());
+                    output.println("The item was removed from the cart.");
+                    continue;
+                }
+                Optional<String> quantity = input.readLine("New quantity: ");
+                if (quantity.isEmpty())
+                {
+                    return false;
+                }
+                if (quantity.get().strip().equals("0"))
+                {
+                    continue;
+                }
+                cartService.changeCartQuantity(customer.getEmail(), itemId.get(), parseQuantity(quantity.get()));
+                output.println("The quantity was changed.");
+            }
+            catch (IllegalArgumentException | IllegalStateException exception)
+            {
+                output.println("Error: " + exception.getMessage());
+            }
+        }
+    }
+
+    private static int parseQuantity(String text)
+    {
+        try
+        {
+            return Integer.parseInt(text.strip());
+        }
+        catch (NumberFormatException exception)
+        {
+            throw new IllegalArgumentException("Quantity must be a whole number between 1 and 20.");
+        }
+    }
+
+    private void printCart(CartDto cart)
+    {
+        if (cart.getLines().isEmpty())
+        {
+            output.println("Your cart is empty.");
+            return;
+        }
+        output.println("Restaurant: " + cart.getRestaurantName());
+        for (CartLineDto line : cart.getLines())
+        {
+            output.println(String.format(Locale.ROOT, "  %-8s %d x %s @ %.2f TL = %.2f TL", line.getItemId(),
+                    line.getQuantity(), line.getItemName(), line.getUnitPrice(), line.getLineTotal()));
+        }
+        printAmount("Subtotal", cart.getSubtotal());
+        printAmount("Delivery fee", cart.getDeliveryFee());
+        printAmount("Total", cart.getTotal());
+    }
+
+    /** UC7: lists the orders the current customer placed in this run, oldest first. */
+    private void showMyOrders(CustomerDto customer)
+    {
+        output.println();
+        output.println("My orders");
+        try
+        {
+            List<OrderDto> orders = orderService.getCustomerOrders(customer.getEmail());
+            if (orders.isEmpty())
+            {
+                output.println("You have not placed any orders yet.");
+            }
+            for (OrderDto order : orders)
+            {
+                output.println();
+                output.println("Order #" + order.getOrderNumber() + " - " + order.getRestaurantName()
+                        + " - " + order.getStatus());
+                printOrderLines(order.getLines());
+                printAmount("Total", order.getTotal());
+            }
+        }
+        catch (IllegalArgumentException | IllegalStateException exception)
+        {
+            output.println("Error: " + exception.getMessage());
+        }
     }
 
     private void printMenu(MenuDto menu)

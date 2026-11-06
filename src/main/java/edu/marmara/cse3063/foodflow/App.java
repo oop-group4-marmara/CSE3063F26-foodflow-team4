@@ -1,5 +1,6 @@
 package edu.marmara.cse3063.foodflow;
 
+import edu.marmara.cse3063.foodflow.application.services.CartService;
 import edu.marmara.cse3063.foodflow.application.services.CustomerService;
 import edu.marmara.cse3063.foodflow.application.services.OrderService;
 import edu.marmara.cse3063.foodflow.application.services.RestaurantService;
@@ -28,9 +29,10 @@ public class App {
             var customerService = new CustomerService(customerRepository);
             var restaurantRepository = new RestaurantRepository();
             var restaurantService = new RestaurantService(restaurantRepository);
+            var cartService = new CartService(restaurantRepository, customerRepository);
             var orderService = new OrderService(customerRepository, new InMemoryOrderRepository());
             var input = new ConsoleInput(scanner, System.out);
-            new ConsoleUI(customerService, restaurantService, orderService, input, System.out).run();
+            new ConsoleUI(customerService, restaurantService, cartService, orderService, input, System.out).run();
         } catch (IOException exception) {
             System.err.println("Error: Could not load restaurant data: " + exception.getMessage());
         }

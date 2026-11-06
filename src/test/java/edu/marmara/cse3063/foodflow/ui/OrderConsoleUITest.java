@@ -3,6 +3,7 @@ package edu.marmara.cse3063.foodflow.ui;
 import edu.marmara.cse3063.foodflow.application.dtos.MenuDto;
 import edu.marmara.cse3063.foodflow.application.dtos.RestaurantDto;
 import edu.marmara.cse3063.foodflow.application.interfaces.IRestaurantService;
+import edu.marmara.cse3063.foodflow.application.services.CartService;
 import edu.marmara.cse3063.foodflow.application.services.CustomerService;
 import edu.marmara.cse3063.foodflow.application.services.OrderService;
 import edu.marmara.cse3063.foodflow.domain.models.Address;
@@ -105,7 +106,8 @@ class OrderConsoleUITest
         try (Scanner scanner = new Scanner(script);
              PrintStream output = new PrintStream(bytes, true, StandardCharsets.UTF_8))
         {
-            new ConsoleUI(customerService, new NoRestaurantService(), orderService,
+            new ConsoleUI(customerService, new NoRestaurantService(),
+                    new CartService(new EmptyRestaurantRepository(), customers), orderService,
                     new ConsoleInput(scanner, output), output).run();
         }
         return bytes.toString(StandardCharsets.UTF_8).replace("\r\n", "\n");

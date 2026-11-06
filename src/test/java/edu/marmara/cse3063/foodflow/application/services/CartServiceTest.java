@@ -1,10 +1,13 @@
 package edu.marmara.cse3063.foodflow.application.services;
 
 import edu.marmara.cse3063.foodflow.application.dtos.CartDto;
+import edu.marmara.cse3063.foodflow.domain.models.Address;
 import edu.marmara.cse3063.foodflow.domain.models.Cart;
+import edu.marmara.cse3063.foodflow.domain.models.Customer;
 import edu.marmara.cse3063.foodflow.domain.models.MenuItem;
 import edu.marmara.cse3063.foodflow.domain.models.Restaurant;
 import edu.marmara.cse3063.foodflow.infrastructure.interfaces.IRestaurantRepository;
+import edu.marmara.cse3063.foodflow.infrastructure.repositories.InMemoryCustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +20,7 @@ class CartServiceTest {
 
     private Cart cart;
     private CartService cartService;
+    private IRestaurantRepository repository;
     private Restaurant restaurant1;
     private Restaurant restaurant2;
     private MenuItem item1;
@@ -50,7 +54,8 @@ class CartServiceTest {
             }
         };
 
-        cartService = new CartService(r);
+        repository = r;
+        cartService = new CartService(r, new InMemoryCustomerRepository());
     }
 
     // BR-1
@@ -213,5 +218,57 @@ class CartServiceTest {
         assertEquals(280.0, output.getSubtotal());
         assertEquals(25.0, output.getDeliveryFee());
         assertEquals(305.0, output.getTotal());
+    }
+
+    // UC5 through the customer's e-mail, as the console UI uses it
+    @Test
+    void testAddToCartFindsTheCustomerCartByEmail() throws Exception {
+        InMemoryCustomerRepository customers = new InMemoryCustomerRepository();
+        Customer customer = customers.saveCustomer(
+                new Customer("Alice", "alice@example.com", new Address("Kadıköy", "Moda Street")));
+        CartService service = new CartService(repository, customers);
+
+        CartDto result = service.addToCart("ALICE@example.com", " R01 ", " R01-01 ", 2);
+
+        assertEquals("Kebapçı Mehmet", result.getRestaurantName());
+        assertEquals("R01-01", result.getLines().getFirst().getItemId());
+        assertEquals(2, customer.getCart().getLines().getFirst().getQuantity());
+    }
+
+    // BR-2 through the customer's e-mail: the checked refusal reaches the UI as an unchecked exception
+    @Test
+    void testAddToCartFromAnotherRestaurantIsRefusedAndLeavesTheCartUnchanged() throws Exception {
+        InMemoryCustomerRepository customers = new InMemoryCustomerRepository();
+        Customer customer = customers.saveCustomer(
+                new Customer("Alice", "alice@example.com", new Address("Kadıköy", "Moda Street")));
+        CartService service = new CartService(repository, customers);
+        service.addToCart("alice@example.com", "R01", "R01-01", 1);
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> service.addToCart("alice@example.com", "R02", "R02-01", 1));
+
+        assertTrue(exception.getMessage().contains("another restaurant"));
+        assertEquals(1, customer.getCart().getLines().size());
+        assertEquals("R01", customer.getCart().getRestaurant().getId());
+    }
+
+    // UC5 step 6: removing a line removes it whatever its quantity
+    @Test
+    void testRemoveFromCartRemovesTheWholeLine() throws Exception {
+        InMemoryCustomerRepository customers = new InMemoryCustomerRepository();
+        customers.saveCustomer(new Customer("Alice", "alice@example.com", new Address("Kadıköy", "Moda Street")));
+        CartService service = new CartService(repository, customers);
+        service.addToCart("alice@example.com", "R01", "R01-01", 3);
+
+        CartDto result = service.removeFromCart("alice@example.com", "R01-01");
+
+        assertTrue(result.getLines().isEmpty());
+        assertNull(result.getRestaurantName());
+        assertEquals(0.0, result.getTotal());
+    }
+
+    @Test
+    void testCartOfUnknownCustomerIsRefused() {
+        assertThrows(IllegalArgumentException.class, () -> cartService.getCart("nobody@example.com"));
     }
 }

@@ -5,19 +5,24 @@ import edu.marmara.cse3063.foodflow.application.dtos.CartLineDto;
 import edu.marmara.cse3063.foodflow.application.interfaces.ICartService;
 import edu.marmara.cse3063.foodflow.domain.models.Cart;
 import edu.marmara.cse3063.foodflow.domain.models.CartLine;
+import edu.marmara.cse3063.foodflow.domain.models.Customer;
 import edu.marmara.cse3063.foodflow.domain.models.MenuItem;
 import edu.marmara.cse3063.foodflow.domain.models.Restaurant;
+import edu.marmara.cse3063.foodflow.infrastructure.interfaces.ICustomerRepository;
 import edu.marmara.cse3063.foodflow.infrastructure.interfaces.IRestaurantRepository;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Objects;
 
 public class CartService implements ICartService {
     private final IRestaurantRepository restaurantRepository;
+    private final ICustomerRepository customerRepository;
 
     //Mr. Yaman quoted: "Any service can access any repository"
-    public CartService(IRestaurantRepository restaurantRepository) {
+    public CartService(IRestaurantRepository restaurantRepository, ICustomerRepository customerRepository) {
         this.restaurantRepository = Objects.requireNonNull(restaurantRepository, "restaurantRepository");
+        this.customerRepository = Objects.requireNonNull(customerRepository, "customerRepository");
     }
 
     //finds if a menu item is included already in a cart line
@@ -40,6 +45,7 @@ public class CartService implements ICartService {
         ArrayList<CartLineDto> dtoList = new ArrayList<>();
         for (CartLine line : cart.getLines()) {
             dtoList.add(new CartLineDto(
+                    line.getMenuItem().getId(),
                     line.getMenuItem().getName(),
                     line.getMenuItem().getPrice(),
                     line.getQuantity(),
@@ -47,7 +53,8 @@ public class CartService implements ICartService {
             ));
         }
         double deliveryFee = cart.getRestaurant() == null ? 0.0 : cart.getRestaurant().getDeliveryFee();
-        return new CartDto(dtoList, cart.getSubtotal(), deliveryFee, cart.getTotal());
+        String restaurantName = cart.getRestaurant() == null ? null : cart.getRestaurant().getName();
+        return new CartDto(restaurantName, dtoList, cart.getSubtotal(), deliveryFee, cart.getTotal());
     }
 
     @Override
@@ -138,5 +145,60 @@ public class CartService implements ICartService {
         if (cart.getLines().isEmpty()) throw new Exception("The cart is empty.");
 
         return toDto(cart);
+    }
+
+    @Override
+    public CartDto addToCart(String customerEmail, String restaurantId, String itemId, int quantity) {
+        Cart cart = findCart(customerEmail);
+        try {
+            return addItem(strip(itemId), strip(restaurantId), cart, quantity);
+        } catch (RuntimeException exception) {
+            throw exception;
+        } catch (Exception exception) {
+            throw new IllegalStateException(exception.getMessage(), exception);
+        }
+    }
+
+    @Override
+    public CartDto changeCartQuantity(String customerEmail, String itemId, int newQuantity) {
+        Cart cart = findCart(customerEmail);
+        try {
+            return changeQuantity(strip(itemId), cart, newQuantity);
+        } catch (RuntimeException exception) {
+            throw exception;
+        } catch (Exception exception) {
+            throw new IllegalStateException(exception.getMessage(), exception);
+        }
+    }
+
+    @Override
+    public CartDto removeFromCart(String customerEmail, String itemId) {
+        return changeCartQuantity(customerEmail, itemId, 0);
+    }
+
+    @Override
+    public CartDto emptyCart(String customerEmail) {
+        Cart cart = findCart(customerEmail);
+        cart.emptyCart();
+        return toDto(cart);
+    }
+
+    @Override
+    public CartDto getCart(String customerEmail) {
+        return toDto(findCart(customerEmail));
+    }
+
+    private Cart findCart(String customerEmail) {
+        if (customerEmail == null || customerEmail.isBlank()) {
+            throw new IllegalArgumentException("A customer must be identified before using the cart.");
+        }
+        Customer customer = customerRepository.findCustomerByEmail(customerEmail)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Customer with e-mail '" + customerEmail.trim().toLowerCase(Locale.ROOT) + "' not found."));
+        return customer.getCart();
+    }
+
+    private static String strip(String value) {
+        return value == null ? null : value.strip();
     }
 }
