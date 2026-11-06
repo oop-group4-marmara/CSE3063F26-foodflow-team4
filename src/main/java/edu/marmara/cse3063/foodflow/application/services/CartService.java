@@ -1,5 +1,7 @@
 package edu.marmara.cse3063.foodflow.application.services;
 
+import edu.marmara.cse3063.foodflow.application.dtos.CartDto;
+import edu.marmara.cse3063.foodflow.application.dtos.CartLineDto;
 import edu.marmara.cse3063.foodflow.application.interfaces.ICartService;
 import edu.marmara.cse3063.foodflow.domain.models.Cart;
 import edu.marmara.cse3063.foodflow.domain.models.CartLine;
@@ -28,8 +30,22 @@ public class CartService implements ICartService {
         return null;
     }
 
+    private CartDto toDto(Cart cart) {
+        ArrayList<CartLineDto> dtoList = new ArrayList<>();
+        for (CartLine line : cart.getLines()) {
+            dtoList.add(new CartLineDto(
+                    line.getMenuItem().getName(),
+                    line.getMenuItem().getPrice(),
+                    line.getQuantity(),
+                    line.getLineTotal()
+            ));
+        }
+        double deliveryFee = cart.getRestaurant() == null ? 0.0 : cart.getRestaurant().getDeliveryFee();
+        return new CartDto(dtoList, cart.getSubtotal(), deliveryFee, cart.getTotal());
+    }
+
     @Override
-    public Cart addItem(String itemId, String restaurantId, Cart cart, int quantity) throws Exception {
+    public CartDto addItem(String itemId, String restaurantId, Cart cart, int quantity) throws Exception {
         if (cart == null) throw new IllegalArgumentException("Cart can't be null!");
         if (itemId == null || itemId.isBlank()) throw new IllegalArgumentException("Item Id can't be null!");
         if (restaurantId == null || restaurantId.isBlank()) throw new IllegalArgumentException("RestaurantvId can't be null!");
@@ -70,11 +86,11 @@ public class CartService implements ICartService {
             cart.setLines(currentLines);
         }
 
-        return cart;
+        return toDto(cart);
     }
 
     @Override
-    public Cart changeQuantity(String itemId, Cart cart, int newQuantity) throws Exception {
+    public CartDto changeQuantity(String itemId, Cart cart, int newQuantity) throws Exception {
         if (cart == null) throw new IllegalArgumentException("Cart can't be null!");
         if (itemId == null || itemId.isBlank()) throw new IllegalArgumentException("Item Id can't be null!");
 
@@ -93,11 +109,11 @@ public class CartService implements ICartService {
             else throw new Exception("Item not found in cart!");
         }
 
-        return cart;
+        return toDto(cart);
     }
 
     @Override
-    public Cart removeItem(String itemId, Cart cart) throws Exception {
+    public CartDto removeItem(String itemId, Cart cart) throws Exception {
         if (cart == null) throw new IllegalArgumentException("Cart can't be null!");
         if (itemId == null || itemId.isBlank()) throw new IllegalArgumentException("Item Id can't be null!");
 
@@ -111,29 +127,15 @@ public class CartService implements ICartService {
 
         else line.setQuantity(currentQuantity - 1);
 
-        return cart;
+        return toDto(cart);
     }
 
     @Override
-    public String viewCart(Cart cart) throws Exception {
+    public CartDto viewCart(Cart cart) throws Exception {
         if (cart == null) throw new IllegalArgumentException("Cart can't be null!");
 
         if (cart.getLines().isEmpty()) throw new Exception("The cart is empty.");
 
-        StringBuilder s = new StringBuilder();
-
-        for (CartLine line : cart.getLines()) {
-            s.append(String.format("Item: %s | Price: %.2f TL | Quantity: %d | Line Total: %.2f TL\n",
-                    line.getMenuItem().getName(),
-                    line.getMenuItem().getPrice(),
-                    line.getQuantity(),
-                    line.getLineTotal()));
-        }
-
-        s.append(String.format("Subtotal: %.2f TL\n", cart.getSubtotal()));
-        s.append(String.format("Delivery Fee: %.2f TL\n", cart.getRestaurant().getDeliveryFee()));
-        s.append(String.format("Total: %.2f TL", cart.getTotal()));
-
-        return s.toString();
+        return toDto(cart);
     }
 }

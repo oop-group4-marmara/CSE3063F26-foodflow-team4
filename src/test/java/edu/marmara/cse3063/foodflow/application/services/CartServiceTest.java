@@ -1,5 +1,6 @@
 package edu.marmara.cse3063.foodflow.application.services;
 
+import edu.marmara.cse3063.foodflow.application.dtos.CartDto;
 import edu.marmara.cse3063.foodflow.domain.models.Cart;
 import edu.marmara.cse3063.foodflow.domain.models.MenuItem;
 import edu.marmara.cse3063.foodflow.domain.models.Restaurant;
@@ -55,11 +56,11 @@ class CartServiceTest {
     // BR-1
     @Test
     void testAddItemQuantity() throws Exception {
-        cartService.addItem("R01-01", "R01", cart, 2);
+        CartDto result = cartService.addItem("R01-01", "R01", cart, 2);
 
-        assertEquals(1, cart.getLines().size());
-        assertEquals(2, cart.getLines().getFirst().getQuantity());
-        assertEquals(restaurant1, cart.getRestaurant());
+        assertEquals(1, result.getLines().size());
+        assertEquals(2, result.getLines().getFirst().getQuantity());
+        assertEquals(25.0, result.getDeliveryFee());
     }
 
     // BR-1
@@ -78,10 +79,10 @@ class CartServiceTest {
     @Test
     void testAddItemAlreadyInCartIncreasesQuantity() throws Exception {
         cartService.addItem("R01-01", "R01", cart, 5);
-        cartService.addItem("R01-01", "R01", cart, 3);
+        CartDto result = cartService.addItem("R01-01", "R01", cart, 3);
 
-        assertEquals(1, cart.getLines().size());
-        assertEquals(8, cart.getLines().getFirst().getQuantity());
+        assertEquals(1, result.getLines().size());
+        assertEquals(8, result.getLines().getFirst().getQuantity());
     }
 
     // BR-1
@@ -106,36 +107,36 @@ class CartServiceTest {
     @Test
     void testRemoveItemDecreasesQuantity() throws Exception {
         cartService.addItem("R01-01", "R01", cart, 3);
-        cartService.removeItem("R01-01", cart);
+        CartDto result = cartService.removeItem("R01-01", cart);
 
-        assertEquals(2, cart.getLines().get(0).getQuantity());
+        assertEquals(2, result.getLines().getFirst().getQuantity());
     }
 
     // BR-1 & BR-3
     @Test
     void testRemoveItemDeletesLineIfQuantityIsOne() throws Exception {
         cartService.addItem("R01-01", "R01", cart, 1);
-        cartService.removeItem("R01-01", cart);
+        CartDto result = cartService.removeItem("R01-01", cart);
 
-        assertTrue(cart.getLines().isEmpty());
+        assertTrue(result.getLines().isEmpty());
     }
 
     // BR-1
     @Test
     void testChangeItemQuantity() throws Exception {
         cartService.addItem("R01-01", "R01", cart, 5);
-        cartService.changeQuantity("R01-01", cart, 12);
+        CartDto result = cartService.changeQuantity("R01-01", cart, 12);
 
-        assertEquals(12, cart.getLines().getFirst().getQuantity());
+        assertEquals(12, result.getLines().getFirst().getQuantity());
     }
 
     // BR-1
     @Test
     void testChangeItemQuantityToZeroRemovesLine() throws Exception {
         cartService.addItem("R01-01", "R01", cart, 5);
-        cartService.changeQuantity("R01-01", cart, 0);
+        CartDto result = cartService.changeQuantity("R01-01", cart, 0);
 
-        assertTrue(cart.getLines().isEmpty());
+        assertTrue(result.getLines().isEmpty());
     }
 
     // BR-1
@@ -149,10 +150,10 @@ class CartServiceTest {
     @Test
     void testCartTotalsCalculation() throws Exception {
         cartService.addItem("R01-01", "R01", cart, 2);
-        cartService.addItem("R01-02", "R01", cart, 1);
+        CartDto result = cartService.addItem("R01-02", "R01", cart, 1);
 
-        assertEquals(600.0, cart.getSubtotal());
-        assertEquals(625.0, cart.getTotal());
+        assertEquals(600.0, result.getSubtotal());
+        assertEquals(625.0, result.getTotal());
     }
 
     // BR-2
@@ -177,14 +178,15 @@ class CartServiceTest {
     void testViewCartReturnsCorrectDetails() throws Exception {
         cartService.addItem("R01-01", "R01", cart, 2);
 
-        String output = cartService.viewCart(cart);
+        CartDto output = cartService.viewCart(cart);
 
-        assertTrue(output.contains("Item: Lahmacun"));
-        assertTrue(output.contains("Price: 140.00 TL"));
-        assertTrue(output.contains("Quantity: 2"));
-        assertTrue(output.contains("Line Total: 280.00 TL"));
-        assertTrue(output.contains("Subtotal: 280.00 TL"));
-        assertTrue(output.contains("Delivery Fee: 25.00 TL"));
-        assertTrue(output.contains("Total: 305.00 TL"));
+        assertEquals(1, output.getLines().size());
+        assertEquals("Lahmacun", output.getLines().getFirst().getItemName());
+        assertEquals(140.0, output.getLines().getFirst().getUnitPrice());
+        assertEquals(2, output.getLines().getFirst().getQuantity());
+        assertEquals(280.0, output.getLines().getFirst().getLineTotal());
+        assertEquals(280.0, output.getSubtotal());
+        assertEquals(25.0, output.getDeliveryFee());
+        assertEquals(305.0, output.getTotal());
     }
 }
