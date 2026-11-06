@@ -23,6 +23,12 @@ Run all commands from the repository root.
 
 `mvn package` writes `target/foodflow-1.0-SNAPSHOT.jar`. The same `mvn -B package` command runs on every push and pull request to `main` through GitHub Actions.
 
+## Current console flow
+
+Register or continue by e-mail, then browse restaurants and filter by cuisine or district. Filters accept case-insensitive partial text; blank fields apply no restriction.
+
+Customers remain in memory until exit. Restaurant data is loaded from `data/restaurants.json`.
+
 ## Project structure
 
 ```
@@ -31,6 +37,7 @@ Run all commands from the repository root.
 │   └── restaurants.json          # Restaurant and menu data
 ├── docs/                         # Vision, use cases, glossary, iteration plans, UML diagrams
 ├── src/main/java/edu/marmara/cse3063/foodflow/
+│   ├── App.java                  # Application entry point and object wiring
 │   ├── domain/                   # Core business entities
 │   ├── application/              # Use case services and DTOs
 │   ├── infrastructure/           # Repositories and JSON loading
@@ -66,5 +73,7 @@ The console user interface.
 - [Supplementary specification](docs/supplementary-spec.md)
 - [Glossary](docs/glossary.md)
 - [Iteration plan](docs/iteration-plan.md)
+- [Console UI implementation and next steps](docs/console-ui-plan.md)
+- [Sample console session](docs/sample-run.txt)
 - [AI usage log](docs/ai-usage-log.md)
 - [UML diagrams](docs/diagrams/)

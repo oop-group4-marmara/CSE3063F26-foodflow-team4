@@ -1,12 +1,15 @@
 package edu.marmara.cse3063.foodflow.application.interfaces;
 
-import edu.marmara.cse3063.foodflow.domain.models.Address;
-import edu.marmara.cse3063.foodflow.domain.models.Customer;
+import edu.marmara.cse3063.foodflow.application.dtos.CustomerDto;
+import edu.marmara.cse3063.foodflow.application.dtos.RegisterCustomerDto;
 
 import java.util.Optional;
 
 public interface ICustomerService {
-    public Customer registerCustomer(String name, String email, Address address) throws Exception;
-    public Customer loginExisting(String email);
-    public Optional<Customer> getActiveCustomer();
+    /** Checks registration e-mail rules without saving a customer or opening a session. */
+    void validateRegistrationEmail(String email);
+    CustomerDto registerCustomer(RegisterCustomerDto request);
+    CustomerDto loginExisting(String email);
+    Optional<CustomerDto> getActiveCustomer();
+    void logout();
 }
