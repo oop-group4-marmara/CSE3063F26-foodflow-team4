@@ -1,8 +1,9 @@
 package edu.marmara.cse3063.foodflow.application.dtos;
 
-import edu.marmara.cse3063.foodflow.domain.models.OrderLine;
+import java.util.Objects;
 
-public class OrderLineDto
+/** One order line as recorded at placement: name, unit price, quantity and line total. */
+public final class OrderLineDto implements IDto
 {
     private final String itemName;
     private final double unitPrice;
@@ -11,19 +12,10 @@ public class OrderLineDto
 
     public OrderLineDto(String itemName, double unitPrice, int quantity, double lineTotal)
     {
-        this.itemName = itemName;
+        this.itemName = Objects.requireNonNull(itemName, "itemName");
         this.unitPrice = unitPrice;
         this.quantity = quantity;
         this.lineTotal = lineTotal;
-    }
-
-    public static OrderLineDto from(OrderLine line)
-    {
-        return new OrderLineDto(
-                line.getItemName(),
-                line.getUnitPrice(),
-                line.getQuantity(),
-                line.getLineTotal());
     }
 
     public String getItemName()

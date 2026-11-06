@@ -1,9 +1,13 @@
 package edu.marmara.cse3063.foodflow.ui;
 
 import edu.marmara.cse3063.foodflow.application.dtos.CustomerDto;
+import edu.marmara.cse3063.foodflow.application.dtos.OrderDto;
+import edu.marmara.cse3063.foodflow.application.dtos.OrderLineDto;
+import edu.marmara.cse3063.foodflow.application.dtos.OrderPreviewDto;
 import edu.marmara.cse3063.foodflow.application.dtos.RegisterCustomerDto;
 import edu.marmara.cse3063.foodflow.application.dtos.RestaurantDto;
 import edu.marmara.cse3063.foodflow.application.interfaces.ICustomerService;
+import edu.marmara.cse3063.foodflow.application.interfaces.IOrderService;
 import edu.marmara.cse3063.foodflow.application.interfaces.IRestaurantService;
 
 import java.io.PrintStream;
@@ -18,14 +22,16 @@ public final class ConsoleUI
 {
     private final ICustomerService customerService;
     private final IRestaurantService restaurantService;
+    private final IOrderService orderService;
     private final ConsoleInput input;
     private final PrintStream output;
 
     public ConsoleUI(ICustomerService customerService, IRestaurantService restaurantService,
-                     ConsoleInput input, PrintStream output)
+                     IOrderService orderService, ConsoleInput input, PrintStream output)
     {
         this.customerService = Objects.requireNonNull(customerService, "customerService");
         this.restaurantService = Objects.requireNonNull(restaurantService, "restaurantService");
+        this.orderService = Objects.requireNonNull(orderService, "orderService");
         this.input = Objects.requireNonNull(input, "input");
         this.output = Objects.requireNonNull(output, "output");
     }
@@ -70,10 +76,11 @@ public final class ConsoleUI
         output.println("================================");
         output.println("1. Browse restaurants");
         output.println("2. Change customer");
+        output.println("3. Place order");
         output.println("0. Exit");
         output.println();
 
-        OptionalInt choice = input.readChoice("Your choice: ", 0, 1, 2);
+        OptionalInt choice = input.readChoice("Your choice: ", 0, 1, 2, 3);
         if (choice.isEmpty() || choice.getAsInt() == 0)
         {
             return false;
@@ -82,8 +89,94 @@ public final class ConsoleUI
         {
             return browseRestaurants();
         }
+        if (choice.getAsInt() == 3)
+        {
+            return placeOrder(customer);
+        }
         customerService.logout();
         return true;
+    }
+
+    private boolean placeOrder(CustomerDto customer)
+    {
+        output.println();
+        output.println("Place order");
+        try
+        {
+            OrderPreviewDto preview = orderService.previewOrder(customer.getEmail());
+            output.println("Restaurant: " + preview.getRestaurantName());
+            printOrderLines(preview.getLines());
+            printAmount("Subtotal", preview.getSubtotal());
+            printAmount("Delivery fee", preview.getDeliveryFee());
+            printAmount("Total", preview.getTotal());
+            output.println("Delivery address: " + preview.getStreet() + ", " + preview.getDistrict());
+            output.println("Payment method: " + formatPaymentMethod(preview.getPaymentMethod()));
+            output.println();
+
+            while (true)
+            {
+                Optional<String> answer = input.readLine("Confirm the order? (y/n): ");
+                if (answer.isEmpty())
+                {
+                    return false;
+                }
+                String normalized = answer.get().strip().toLowerCase(Locale.ROOT);
+                if (normalized.equals("n") || normalized.equals("no"))
+                {
+                    output.println("The order was not placed. Your cart is unchanged.");
+                    return true;
+                }
+                if (normalized.equals("y") || normalized.equals("yes"))
+                {
+                    break;
+                }
+                output.println("Please answer y or n.");
+            }
+
+            printReceipt(orderService.placeOrder(customer.getEmail()));
+        }
+        catch (IllegalArgumentException | IllegalStateException exception)
+        {
+            output.println("Error: " + exception.getMessage());
+        }
+        return true;
+    }
+
+    private void printReceipt(OrderDto order)
+    {
+        output.println();
+        output.println("================================");
+        output.println("            RECEIPT");
+        output.println("================================");
+        output.println("Order number: " + order.getOrderNumber());
+        output.println("Status: " + order.getStatus());
+        output.println("Restaurant: " + order.getRestaurantName());
+        printOrderLines(order.getLines());
+        printAmount("Subtotal", order.getSubtotal());
+        printAmount("Delivery fee", order.getDeliveryFee());
+        printAmount("Total", order.getTotal());
+        output.println("Delivery address: " + order.getStreet() + ", " + order.getDistrict());
+        output.println("Payment method: " + formatPaymentMethod(order.getPaymentMethod()));
+        output.println("================================");
+    }
+
+    private void printOrderLines(List<OrderLineDto> lines)
+    {
+        for (OrderLineDto line : lines)
+        {
+            output.println(String.format(Locale.ROOT, "  %d x %s @ %.2f TL = %.2f TL", line.getQuantity(),
+                    line.getItemName(), line.getUnitPrice(), line.getLineTotal()));
+        }
+    }
+
+    private void printAmount(String label, double amount)
+    {
+        output.println(String.format(Locale.ROOT, "%s: %.2f TL", label, amount));
+    }
+
+    private static String formatPaymentMethod(String paymentMethod)
+    {
+        return paymentMethod.equals("CASH_ON_DELIVERY") ? "Cash on delivery" : paymentMethod;
     }
 
     private boolean browseRestaurants()

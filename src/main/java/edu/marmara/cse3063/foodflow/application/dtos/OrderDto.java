@@ -1,65 +1,37 @@
 package edu.marmara.cse3063.foodflow.application.dtos;
-import edu.marmara.cse3063.foodflow.domain.models.Order;
-import edu.marmara.cse3063.foodflow.domain.models.OrderLine;
-import edu.marmara.cse3063.foodflow.domain.models.OrderStatus;
-import edu.marmara.cse3063.foodflow.domain.models.PaymentMethod;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class OrderDto
+/** An immutable receipt of a placed order (UC6 step 5). */
+public final class OrderDto implements IDto
 {
     private final long orderNumber;
-    private final OrderStatus status;
-    private final PaymentMethod paymentMethod;
-    private final String customerName;
-    private final String customerEmail;
+    private final String status;
+    private final String paymentMethod;
     private final String restaurantName;
-    private final AddressDto deliveryAddress;
     private final List<OrderLineDto> lines;
-    private final double deliveryFee;
     private final double subtotal;
+    private final double deliveryFee;
     private final double total;
+    private final String district;
+    private final String street;
 
-    public OrderDto(long orderNumber,
-                    OrderStatus status,
-                    PaymentMethod paymentMethod,
-                    String customerName,
-                    String customerEmail,
-                    String restaurantName,
-                    AddressDto deliveryAddress,
-                    List<OrderLineDto> lines,
-                    double deliveryFee,
-                    double subtotal,
-                    double total)
+    public OrderDto(long orderNumber, String status, String paymentMethod, String restaurantName,
+                    List<OrderLineDto> lines, double subtotal, double deliveryFee, double total,
+                    String district, String street)
     {
         this.orderNumber = orderNumber;
-        this.status = status;
-        this.paymentMethod = paymentMethod;
-        this.customerName = customerName;
-        this.customerEmail = customerEmail;
-        this.restaurantName = restaurantName;
-        this.deliveryAddress = deliveryAddress;
-        this.lines = new ArrayList<>(lines);
-        this.deliveryFee = deliveryFee;
+        this.status = Objects.requireNonNull(status, "status");
+        this.paymentMethod = Objects.requireNonNull(paymentMethod, "paymentMethod");
+        this.restaurantName = Objects.requireNonNull(restaurantName, "restaurantName");
+        this.lines = new ArrayList<>(Objects.requireNonNull(lines, "lines"));
         this.subtotal = subtotal;
+        this.deliveryFee = deliveryFee;
         this.total = total;
-    }
-
-    public static OrderDto from(Order order)
-    {
-        return new OrderDto(
-                order.getOrderNumber(),
-                order.getStatus(),
-                order.getPaymentMethod(),
-                order.getCustomer().getName(),
-                order.getCustomer().getEmail(),
-                order.getRestaurant().getName(),
-                AddressDto.from(order.getDeliveryAddress()),
-                order.getLines().stream().map(OrderLineDto::from).toList(),
-                order.getDeliveryFee(),
-                order.getSubtotal(),
-                order.getTotal());
+        this.district = Objects.requireNonNull(district, "district");
+        this.street = Objects.requireNonNull(street, "street");
     }
 
     public long getOrderNumber()
@@ -67,24 +39,14 @@ public class OrderDto
         return orderNumber;
     }
 
-    public OrderStatus getStatus()
+    public String getStatus()
     {
         return status;
     }
 
-    public PaymentMethod getPaymentMethod()
+    public String getPaymentMethod()
     {
         return paymentMethod;
-    }
-
-    public String getCustomerName()
-    {
-        return customerName;
-    }
-
-    public String getCustomerEmail()
-    {
-        return customerEmail;
     }
 
     public String getRestaurantName()
@@ -92,19 +54,9 @@ public class OrderDto
         return restaurantName;
     }
 
-    public AddressDto getDeliveryAddress()
-    {
-        return deliveryAddress;
-    }
-
     public List<OrderLineDto> getLines()
     {
         return new ArrayList<>(lines);
-    }
-
-    public double getDeliveryFee()
-    {
-        return deliveryFee;
     }
 
     public double getSubtotal()
@@ -112,8 +64,23 @@ public class OrderDto
         return subtotal;
     }
 
+    public double getDeliveryFee()
+    {
+        return deliveryFee;
+    }
+
     public double getTotal()
     {
         return total;
+    }
+
+    public String getDistrict()
+    {
+        return district;
+    }
+
+    public String getStreet()
+    {
+        return street;
     }
 }

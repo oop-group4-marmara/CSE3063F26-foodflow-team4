@@ -27,6 +27,18 @@ public class Cart
         this.lines = new ArrayList<>(lines);
     }
 
+    public void deleteCartLine(CartLine cartLine) {
+        lines.remove(cartLine);
+        return;
+    }
+
+    public void emptyCart() {
+        //ArrayList<CartLine>() is not working (idk why)
+        this.lines = new ArrayList<>();
+        this.restaurant = null;
+        return;
+    }
+
     public double getSubtotal()
     {
         double subtotal = 0.0;
