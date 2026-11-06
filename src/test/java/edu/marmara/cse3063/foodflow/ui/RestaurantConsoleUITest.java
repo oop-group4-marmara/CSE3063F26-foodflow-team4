@@ -1,6 +1,8 @@
 package edu.marmara.cse3063.foodflow.ui;
 
 import edu.marmara.cse3063.foodflow.application.dtos.CustomerDto;
+import edu.marmara.cse3063.foodflow.application.dtos.MenuDto;
+import edu.marmara.cse3063.foodflow.application.dtos.MenuItemDto;
 import edu.marmara.cse3063.foodflow.application.dtos.RegisterCustomerDto;
 import edu.marmara.cse3063.foodflow.application.dtos.RestaurantDto;
 import edu.marmara.cse3063.foodflow.application.interfaces.ICustomerService;
@@ -19,6 +21,8 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -37,6 +41,17 @@ class RestaurantConsoleUITest
     private static final RestaurantDto ITALIAN = new RestaurantDto(
             "R02", "Pizza Roma", "Italian", "Beşiktaş", 40.0);
     private static final List<RestaurantDto> CATALOG = List.of(TURKISH, VEGAN, ITALIAN);
+    private static final MenuDto TURKISH_MENU = new MenuDto("R01", "Kebapçı Mehmet", 25.0, turkishMenu());
+
+    /** A LinkedHashMap so that the fixture has the catalog order the service guarantees. */
+    private static Map<String, List<MenuItemDto>> turkishMenu()
+    {
+        Map<String, List<MenuItemDto>> itemsByCategory = new LinkedHashMap<>();
+        itemsByCategory.put("Main", List.of(new MenuItemDto("R01-01", "Lahmacun", "Main", 140.0),
+                new MenuItemDto("R01-02", "Adana Kebap", "Main", 260.0)));
+        itemsByCategory.put("Drink", List.of(new MenuItemDto("R01-05", "Ayran", "Drink", 40.0)));
+        return itemsByCategory;
+    }
 
     @Test
     @ResourceLock("java.util.Locale")
@@ -213,6 +228,51 @@ class RestaurantConsoleUITest
         assertEquals(0, customers.logoutCalls);
     }
 
+    @Test
+    @ResourceLock("java.util.Locale")
+    void menuGroupsItemsByCategoryAndPrintsEveryPriceWithTwoDecimalsAndTl()
+    {
+        RecordingRestaurantService restaurants = new RecordingRestaurantService(CATALOG);
+        restaurants.menus.put("R01", TURKISH_MENU);
+        Locale original = Locale.getDefault();
+        String output;
+        try
+        {
+            Locale.setDefault(Locale.forLanguageTag("tr-TR"));
+            output = run("1\n3\nR01\n0\n0\n", new ActiveCustomerService(), restaurants);
+        }
+        finally
+        {
+            Locale.setDefault(original);
+        }
+
+        assertTrue(output.contains("3. View a menu"));
+        assertTrue(output.contains("Menu - Kebapçı Mehmet"));
+        assertTrue(output.contains("Lahmacun"));
+        assertTrue(output.contains("140.00 TL"));
+        assertTrue(output.contains("40.00 TL"));
+        assertTrue(output.contains("Delivery fee: 25.00 TL"));
+        assertFalse(output.contains("140,00 TL"));
+        // The two Main items share one heading, which is printed before the Drink heading.
+        assertEquals(1, occurrences(output, "\nMain\n"));
+        assertEquals(1, occurrences(output, "\nDrink\n"));
+        assertTrue(output.indexOf("Adana Kebap") < output.indexOf("\nDrink\n"));
+    }
+
+    @Test
+    void unknownRestaurantIdIsReportedAndTheCustomerCanViewAMenuAfterwards()
+    {
+        RecordingRestaurantService restaurants = new RecordingRestaurantService(CATALOG);
+        restaurants.menus.put("R01", TURKISH_MENU);
+
+        String output = run("1\n3\nR99\n3\nR01\n0\n0\n",
+                new ActiveCustomerService(), restaurants);
+
+        assertTrue(output.contains("Error: No restaurant has the ID R99."));
+        assertTrue(output.contains("Menu - Kebapçı Mehmet"));
+        assertEquals(1, occurrences(output, "Goodbye."));
+    }
+
     private String run(String script, ICustomerService customers, IRestaurantService restaurants)
     {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -249,6 +309,7 @@ class RestaurantConsoleUITest
         private final List<RestaurantDto> catalog;
         private final Queue<List<RestaurantDto>> filterResponses = new ArrayDeque<>();
         private final List<FilterQuery> queries = new ArrayList<>();
+        private final Map<String, MenuDto> menus = new LinkedHashMap<>();
         private int allCalls;
 
         private RecordingRestaurantService(List<RestaurantDto> catalog)
@@ -274,6 +335,17 @@ class RestaurantConsoleUITest
         public RestaurantDto getRestaurantById(String id)
         {
             throw new AssertionError("Restaurant selection is outside this screen.");
+        }
+
+        @Override
+        public MenuDto viewMenu(String restaurantId)
+        {
+            MenuDto menu = menus.get(restaurantId.strip());
+            if (menu == null)
+            {
+                throw new IllegalArgumentException("No restaurant has the ID " + restaurantId.strip() + ".");
+            }
+            return menu;
         }
     }
 
