@@ -2,6 +2,7 @@ package edu.marmara.cse3063.foodflow.ui;
 
 import edu.marmara.cse3063.foodflow.application.dtos.CustomerDto;
 import edu.marmara.cse3063.foodflow.application.dtos.RegisterCustomerDto;
+import edu.marmara.cse3063.foodflow.application.dtos.MenuDto;
 import edu.marmara.cse3063.foodflow.application.dtos.RestaurantDto;
 import edu.marmara.cse3063.foodflow.application.interfaces.ICustomerService;
 import edu.marmara.cse3063.foodflow.application.interfaces.IRestaurantService;
@@ -305,6 +306,12 @@ class ConsoleUITest
         public RestaurantDto getRestaurantById(String id)
         {
             return null;
+        }
+
+        @Override
+        public MenuDto viewMenu(String restaurantId)
+        {
+            throw new AssertionError("Menus are not part of this fixture.");
         }
     }
 }

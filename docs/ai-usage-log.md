@@ -12,3 +12,4 @@ Undisclosed use is treated as an academic-integrity violation (see the syllabus)
 | 05.11.2026 | Ahmad | Claude | Used AI to draft the SSD diagram and contracts, then rewrote both myself. | Reviewed and revised both drafts to align with UC5, UC6 and the project brief. |
 | 06.11.2026 | Çağatay Kağan | Claude | Used Claude to implement some basic stuff like DTO classes. | Accepted after review. |
 | 06.11.2026 | Çağatay Kağan | Claude | Used Claude to refactor İbrahim's work. | Accepted after review and revised. |
+| 06.11.2026 | Ahmad | Claude | Implement F4 View a menu: the MenuDto/MenuItemDto, viewMenu() in RestaurantService, the menu screen in ConsoleUI and its tests. | Accepted after review; kept the grouping and the BR-9 retry in the UI, and named the operation viewMenu so it matches the SSD. |

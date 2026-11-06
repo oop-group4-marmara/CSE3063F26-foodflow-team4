@@ -1,6 +1,9 @@
 package edu.marmara.cse3063.foodflow.application.services;
 
+import edu.marmara.cse3063.foodflow.application.dtos.MenuDto;
+import edu.marmara.cse3063.foodflow.application.dtos.MenuItemDto;
 import edu.marmara.cse3063.foodflow.application.dtos.RestaurantDto;
+import edu.marmara.cse3063.foodflow.domain.models.MenuItem;
 import edu.marmara.cse3063.foodflow.domain.models.Restaurant;
 import edu.marmara.cse3063.foodflow.infrastructure.interfaces.IRestaurantRepository;
 import org.junit.jupiter.api.Test;
@@ -13,6 +16,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RestaurantServiceTest
@@ -91,6 +95,65 @@ class RestaurantServiceTest
         assertEquals(List.of("R02"), ids(service.filterRestaurants("ital", null)));
         assertEquals(List.of("R01", "R02", "R03", "R04", "R05", "R06"),
                 ids(service.getAllRestaurants()));
+    }
+
+    @Test
+    void menuGroupsTheItemsByCategoryInCatalogOrder()
+    {
+        MenuDto menu = menuService().viewMenu("R01");
+
+        assertEquals(List.of("Main", "Drink"), List.copyOf(menu.getItemsByCategory().keySet()));
+        assertEquals(List.of("Lahmacun", "Adana Kebap"), names(menu, "Main"));
+        assertEquals(List.of("Ayran"), names(menu, "Drink"));
+    }
+
+    @Test
+    void menuCarriesTheRestaurantNameAndItsDeliveryFee()
+    {
+        MenuDto menu = menuService().viewMenu("R01");
+
+        assertEquals("R01", menu.getRestaurantId());
+        assertEquals("Kebapçı Mehmet", menu.getRestaurantName());
+        assertEquals(25.0, menu.getDeliveryFee());
+        assertEquals(140.0, menu.getItemsByCategory().get("Main").getFirst().getPrice());
+    }
+
+    @Test
+    void unknownRestaurantIdIsRefusedWithAMessageTheUiCanShow()
+    {
+        IllegalArgumentException refusal =
+                assertThrows(IllegalArgumentException.class, () -> menuService().viewMenu("R99"));
+
+        assertEquals("No restaurant has the ID R99.", refusal.getMessage());
+    }
+
+    @Test
+    void blankRestaurantIdIsRefused()
+    {
+        assertThrows(IllegalArgumentException.class, () -> menuService().viewMenu(null));
+        assertThrows(IllegalArgumentException.class, () -> menuService().viewMenu("   "));
+    }
+
+    private static List<String> names(MenuDto menu, String category)
+    {
+        return menu.getItemsByCategory().get(category).stream().map(MenuItemDto::getName).toList();
+    }
+
+    private static RestaurantService menuService()
+    {
+        ArrayList<MenuItem> menuItems = new ArrayList<>();
+        try
+        {
+            menuItems.add(new MenuItem("R01-01", "Lahmacun", "Main", 140.0));
+            menuItems.add(new MenuItem("R01-05", "Ayran", "Drink", 40.0));
+            menuItems.add(new MenuItem("R01-02", "Adana Kebap", "Main", 260.0));
+        }
+        catch (Exception exception)
+        {
+            throw new AssertionError(exception);
+        }
+        return new RestaurantService(new CatalogRepository(List.of(
+                new Restaurant("R01", "Kebapçı Mehmet", "Turkish", null, "Kadıköy", 25.0, menuItems))));
     }
 
     private static Stream<Arguments> unrestrictedCriteria()

@@ -1,6 +1,8 @@
 package edu.marmara.cse3063.foodflow.ui;
 
 import edu.marmara.cse3063.foodflow.application.dtos.CustomerDto;
+import edu.marmara.cse3063.foodflow.application.dtos.MenuDto;
+import edu.marmara.cse3063.foodflow.application.dtos.MenuItemDto;
 import edu.marmara.cse3063.foodflow.application.dtos.OrderDto;
 import edu.marmara.cse3063.foodflow.application.dtos.OrderLineDto;
 import edu.marmara.cse3063.foodflow.application.dtos.OrderPreviewDto;
@@ -14,6 +16,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -204,10 +207,11 @@ public final class ConsoleUI
             output.println();
             output.println("1. Filter restaurants");
             output.println("2. Clear filters");
+            output.println("3. View a menu");
             output.println("0. Back");
             output.println();
 
-            OptionalInt choice = input.readChoice("Your choice: ", 0, 1, 2);
+            OptionalInt choice = input.readChoice("Your choice: ", 0, 1, 2, 3);
             if (choice.isEmpty())
             {
                 return false;
@@ -215,6 +219,14 @@ public final class ConsoleUI
             if (choice.getAsInt() == 0)
             {
                 return true;
+            }
+            if (choice.getAsInt() == 3)
+            {
+                if (!viewMenu())
+                {
+                    return false;
+                }
+                continue;
             }
             if (choice.getAsInt() == 2)
             {
@@ -253,6 +265,53 @@ public final class ConsoleUI
             district = submittedDistrict;
             restaurants = results;
         }
+    }
+
+    /** UC4: asks for a restaurant and prints its menu; an unknown ID is reported and asked again (BR-9). */
+    private boolean viewMenu()
+    {
+        output.println("Enter 0 to cancel.");
+        Optional<String> restaurantId = input.readLine("Restaurant ID: ");
+        if (restaurantId.isEmpty())
+        {
+            return false;
+        }
+        if (restaurantId.get().strip().equals("0"))
+        {
+            return true;
+        }
+
+        try
+        {
+            printMenu(restaurantService.viewMenu(restaurantId.get()));
+        }
+        catch (IllegalArgumentException exception)
+        {
+            output.println("Error: " + exception.getMessage());
+        }
+        return true;
+    }
+
+    private void printMenu(MenuDto menu)
+    {
+        output.println();
+        output.println("Menu - " + menu.getRestaurantName());
+        if (menu.getItemsByCategory().isEmpty())
+        {
+            output.println("This restaurant has no menu items.");
+        }
+        for (Map.Entry<String, List<MenuItemDto>> category : menu.getItemsByCategory().entrySet())
+        {
+            output.println();
+            output.println(category.getKey());
+            for (MenuItemDto item : category.getValue())
+            {
+                output.println(String.format(Locale.ROOT, "  %-8s %-24s %8.2f TL",
+                        item.getId(), item.getName(), item.getPrice()));
+            }
+        }
+        output.println();
+        printAmount("Delivery fee", menu.getDeliveryFee());
     }
 
     private void printRestaurantTable(List<RestaurantDto> restaurants)

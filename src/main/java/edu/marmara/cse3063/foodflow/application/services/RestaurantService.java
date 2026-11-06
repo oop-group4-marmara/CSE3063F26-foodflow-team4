@@ -1,12 +1,16 @@
 package edu.marmara.cse3063.foodflow.application.services;
 
+import edu.marmara.cse3063.foodflow.application.dtos.MenuDto;
+import edu.marmara.cse3063.foodflow.application.dtos.MenuItemDto;
 import edu.marmara.cse3063.foodflow.application.dtos.RestaurantDto;
 import edu.marmara.cse3063.foodflow.application.interfaces.IRestaurantService;
+import edu.marmara.cse3063.foodflow.domain.models.MenuItem;
 import edu.marmara.cse3063.foodflow.domain.models.Restaurant;
 import edu.marmara.cse3063.foodflow.domain.models.RestaurantFilter;
 import edu.marmara.cse3063.foodflow.infrastructure.interfaces.IRestaurantRepository;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,6 +71,31 @@ public class RestaurantService implements IRestaurantService
         }
         Restaurant restaurant = restaurantRepository.getRestaurantById(id);
         return restaurant == null ? null : RestaurantDto.fromRestaurant(restaurant);
+    }
+
+    @Override
+    public MenuDto viewMenu(String restaurantId)
+    {
+        // BR-9: an unknown or blank id is reported to the UI instead of ending the program.
+        if (restaurantId == null || restaurantId.isBlank())
+        {
+            throw new IllegalArgumentException("Restaurant ID must not be blank.");
+        }
+        String id = restaurantId.strip();
+        Restaurant restaurant = restaurantRepository.getRestaurantById(id);
+        if (restaurant == null)
+        {
+            throw new IllegalArgumentException("No restaurant has the ID " + id + ".");
+        }
+
+        // A LinkedHashMap keeps the categories and their items in catalog order.
+        LinkedHashMap<String, List<MenuItemDto>> itemsByCategory = new LinkedHashMap<>();
+        for (MenuItem menuItem : restaurant.getMenuItems())
+        {
+            itemsByCategory.computeIfAbsent(menuItem.getCategory(), category -> new ArrayList<>())
+                    .add(MenuItemDto.fromMenuItem(menuItem));
+        }
+        return new MenuDto(restaurant.getId(), restaurant.getName(), restaurant.getDeliveryFee(), itemsByCategory);
     }
 
     public List<Restaurant> filter(RestaurantFilter filter)
