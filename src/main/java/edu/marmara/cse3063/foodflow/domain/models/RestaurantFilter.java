@@ -7,7 +7,7 @@ public class RestaurantFilter
     private String district;
     private String cuisine;
 
-    RestaurantFilter(String district, String cuisine)
+    public RestaurantFilter(String district, String cuisine)
     {
         this.district = (district==null?"" : district.trim());
         this.cuisine =  (cuisine ==null?"": cuisine.trim());
