@@ -29,6 +29,35 @@ public class RestaurantService implements IRestaurantService
     }
 
     @Override
+    public ArrayList<RestaurantDto> filterRestaurants(String cuisine, String district)
+    {
+        String cuisineFilter = cuisine == null ? "" : cuisine.strip();
+        String districtFilter = district == null ? "" : district.strip();
+        ArrayList<RestaurantDto> restaurants = new ArrayList<>();
+        for (Restaurant restaurant : restaurantRepository.getAllRestaurants())
+        {
+            if (containsIgnoreCase(restaurant.getCuisine(), cuisineFilter)
+                    && containsIgnoreCase(restaurant.getDistrict(), districtFilter))
+            {
+                restaurants.add(RestaurantDto.fromRestaurant(restaurant));
+            }
+        }
+        return restaurants;
+    }
+
+    private static boolean containsIgnoreCase(String value, String filter)
+    {
+        for (int offset = 0; offset <= value.length() - filter.length(); offset++)
+        {
+            if (value.regionMatches(true, offset, filter, 0, filter.length()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public RestaurantDto getRestaurantById(String id) throws Exception {
         if (id == null || id.isBlank())
         {
