@@ -7,6 +7,8 @@ import edu.marmara.cse3063.foodflow.application.interfaces.ICustomerService;
 import edu.marmara.cse3063.foodflow.application.interfaces.IRestaurantService;
 import edu.marmara.cse3063.foodflow.application.services.CustomerService;
 import edu.marmara.cse3063.foodflow.infrastructure.repositories.InMemoryCustomerRepository;
+import edu.marmara.cse3063.foodflow.application.services.OrderService;
+import edu.marmara.cse3063.foodflow.infrastructure.repositories.InMemoryOrderRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -226,7 +228,9 @@ class ConsoleUITest
         try (Scanner scanner = new Scanner(script);
              PrintStream output = new PrintStream(bytes, true, StandardCharsets.UTF_8))
         {
-            new ConsoleUI(service, new EmptyRestaurantService(), new ConsoleInput(scanner, output), output).run();
+            new ConsoleUI(service, new EmptyRestaurantService(),
+                    new OrderService(new InMemoryCustomerRepository(), new InMemoryOrderRepository()),
+                    new ConsoleInput(scanner, output), output).run();
         }
         return bytes.toString(StandardCharsets.UTF_8);
     }

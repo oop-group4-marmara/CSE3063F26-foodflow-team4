@@ -5,6 +5,9 @@ import edu.marmara.cse3063.foodflow.application.dtos.RegisterCustomerDto;
 import edu.marmara.cse3063.foodflow.application.dtos.RestaurantDto;
 import edu.marmara.cse3063.foodflow.application.interfaces.ICustomerService;
 import edu.marmara.cse3063.foodflow.application.interfaces.IRestaurantService;
+import edu.marmara.cse3063.foodflow.application.services.OrderService;
+import edu.marmara.cse3063.foodflow.infrastructure.repositories.InMemoryCustomerRepository;
+import edu.marmara.cse3063.foodflow.infrastructure.repositories.InMemoryOrderRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.parallel.ResourceLock;
@@ -216,7 +219,9 @@ class RestaurantConsoleUITest
         try (Scanner scanner = new Scanner(script);
              PrintStream output = new PrintStream(bytes, true, StandardCharsets.UTF_8))
         {
-            new ConsoleUI(customers, restaurants, new ConsoleInput(scanner, output), output).run();
+            new ConsoleUI(customers, restaurants,
+                    new OrderService(new InMemoryCustomerRepository(), new InMemoryOrderRepository()),
+                    new ConsoleInput(scanner, output), output).run();
         }
         return bytes.toString(StandardCharsets.UTF_8).replace("\r\n", "\n");
     }
