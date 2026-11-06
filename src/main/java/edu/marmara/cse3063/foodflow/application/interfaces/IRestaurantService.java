@@ -9,5 +9,8 @@ public interface IRestaurantService
 {
     ArrayList<RestaurantDto> getAllRestaurants();
 
+    /** Filters the full catalog by optional, case-insensitive cuisine and district substrings. */
+    ArrayList<RestaurantDto> filterRestaurants(String cuisine, String district);
+
     RestaurantDto getRestaurantById(String id) throws Exception;
 }
