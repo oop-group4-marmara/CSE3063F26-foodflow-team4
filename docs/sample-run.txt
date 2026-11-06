@@ -1,0 +1,604 @@
+FoodFlow - sample console session (Iteration 1)
+================================================
+
+Recorded on 2026-11-06 from a real run of the application on a terminal
+(UTF-8), started with:
+
+    mvn -q compile exec:java
+
+Restaurant and menu data come from data/restaurants.json. Everything after
+"Your choice:", "Name:", "Quantity:" and the other prompts was typed by the
+user; the rest is the program's output, unedited.
+
+What the session shows
+----------------------
+F1  Identify the customer   registration refused for a malformed e-mail,
+                            then registration; later "Change customer",
+                            an unknown e-mail refused, and continuing with
+                            an existing e-mail (case-insensitive)
+F2  Browse restaurants      the list of all 6 restaurants
+F3  Filter restaurants      by cuisine ("turk"), by district ("kadıköy"),
+                            a filter with no match ("sushi"), clear filters
+F4  View a menu             Kebapçı Mehmet (R01) and Pizza Roma (R02),
+                            grouped by category
+F5  Manage the cart         add items; quantity 21 refused (BR-1); a
+                            non-numeric quantity refused; adding Adana Kebap
+                            again increases its line (BR-3); an item from
+                            another restaurant refused (BR-2); change a
+                            quantity (25 refused, 3 accepted); remove a line
+F6  Place an order          refused while the cart is empty (BR-4); preview
+                            declined with "n" (cart unchanged); confirmed
+                            with "y"; receipt; the cart is empty afterwards
+F7  My orders               the order placed in this session
+
+Refused operations print one "Error: ..." line and the program continues
+(BR-9). All amounts are shown with two decimals and " TL" (BR-5, U-1).
+Turkish characters (ç, ğ, ı, İ, ö, ş, ü) appear in restaurant, district,
+item and customer names (U-4).
+
+------------------------------------------------------------------------
+
+================================
+            FOODFLOW
+================================
+1. Register a new customer
+2. Continue with an existing e-mail
+0. Exit
+
+Your choice: 1
+
+Register a new customer
+Enter 0 to go back.
+Name: Ayşe Yılmaz
+E-mail: ayse.yilmaz
+Error: E-mail is not in the correct format: ayse.yilmaz
+
+================================
+            FOODFLOW
+================================
+1. Register a new customer
+2. Continue with an existing e-mail
+0. Exit
+
+Your choice: 1
+
+Register a new customer
+Enter 0 to go back.
+Name: Ayşe Yılmaz
+E-mail: ayse@example.com
+District: Kadıköy
+Street: Moda Caddesi No: 12
+
+================================
+            FOODFLOW
+Customer: Ayşe Yılmaz
+E-mail: ayse@example.com
+================================
+1. Browse restaurants
+2. Change customer
+3. Place order
+4. View cart
+5. My orders
+0. Exit
+
+Your choice: 3
+
+Place order
+Error: The cart must contain at least one menu item.
+
+================================
+            FOODFLOW
+Customer: Ayşe Yılmaz
+E-mail: ayse@example.com
+================================
+1. Browse restaurants
+2. Change customer
+3. Place order
+4. View cart
+5. My orders
+0. Exit
+
+Your choice: 1
+
+Restaurants
+Cuisine: All | District: All
+ID  | Name           | Cuisine  | District | Delivery fee
+R01 | Kebapçı Mehmet | Turkish  | Kadıköy  |     25.00 TL
+R02 | Pizza Roma     | Italian  | Beşiktaş |     40.00 TL
+R03 | Burger Station | American | Şişli    |     35.00 TL
+R04 | Yeşil Tabak    | Vegan    | Kadıköy  |     30.00 TL
+R05 | Dönerci Usta   | Turkish  | Üsküdar  |     20.00 TL
+R06 | Tatlı Durağı   | Dessert  | Ataşehir |     30.00 TL
+
+1. Filter restaurants
+2. Clear filters
+3. View a menu
+0. Back
+
+Your choice: 1
+Leave a field blank for all values. Enter 0 to cancel.
+Cuisine: turk
+District: 
+
+Restaurants
+Cuisine: turk | District: All
+ID  | Name           | Cuisine | District | Delivery fee
+R01 | Kebapçı Mehmet | Turkish | Kadıköy  |     25.00 TL
+R05 | Dönerci Usta   | Turkish | Üsküdar  |     20.00 TL
+
+1. Filter restaurants
+2. Clear filters
+3. View a menu
+0. Back
+
+Your choice: 1
+Leave a field blank for all values. Enter 0 to cancel.
+Cuisine: 
+District: kadıköy
+
+Restaurants
+Cuisine: All | District: kadıköy
+ID  | Name           | Cuisine | District | Delivery fee
+R01 | Kebapçı Mehmet | Turkish | Kadıköy  |     25.00 TL
+R04 | Yeşil Tabak    | Vegan   | Kadıköy  |     30.00 TL
+
+1. Filter restaurants
+2. Clear filters
+3. View a menu
+0. Back
+
+Your choice: 1
+Leave a field blank for all values. Enter 0 to cancel.
+Cuisine: sushi
+District: 
+
+Restaurants
+Cuisine: sushi | District: All
+No restaurants match the selected filters.
+
+1. Filter restaurants
+2. Clear filters
+3. View a menu
+0. Back
+
+Your choice: 2
+
+Restaurants
+Cuisine: All | District: All
+ID  | Name           | Cuisine  | District | Delivery fee
+R01 | Kebapçı Mehmet | Turkish  | Kadıköy  |     25.00 TL
+R02 | Pizza Roma     | Italian  | Beşiktaş |     40.00 TL
+R03 | Burger Station | American | Şişli    |     35.00 TL
+R04 | Yeşil Tabak    | Vegan    | Kadıköy  |     30.00 TL
+R05 | Dönerci Usta   | Turkish  | Üsküdar  |     20.00 TL
+R06 | Tatlı Durağı   | Dessert  | Ataşehir |     30.00 TL
+
+1. Filter restaurants
+2. Clear filters
+3. View a menu
+0. Back
+
+Your choice: 3
+Enter 0 to cancel.
+Restaurant ID: R01
+
+Menu - Kebapçı Mehmet
+
+Main
+  R01-01   Lahmacun                   140.00 TL
+  R01-02   Adana Kebap                320.00 TL
+  R01-03   İskender                   360.00 TL
+
+Soup
+  R01-04   Mercimek Çorbası            90.00 TL
+
+Drink
+  R01-05   Ayran                       40.00 TL
+  R01-06   Şalgam                      45.00 TL
+
+Dessert
+  R01-07   Künefe                     180.00 TL
+
+Delivery fee: 25.00 TL
+
+1. Add an item to the cart
+0. Back
+
+Your choice: 1
+Enter 0 to cancel.
+Item ID: R01-02
+Quantity: 21
+Error: Quantity must be between 1 and 20.
+
+1. Add an item to the cart
+0. Back
+
+Your choice: 1
+Enter 0 to cancel.
+Item ID: R01-02
+Quantity: iki
+Error: Quantity must be a whole number between 1 and 20.
+
+1. Add an item to the cart
+0. Back
+
+Your choice: 1
+Enter 0 to cancel.
+Item ID: R01-02
+Quantity: 1
+Added to the cart.
+Restaurant: Kebapçı Mehmet
+  R01-02   1 x Adana Kebap @ 320.00 TL = 320.00 TL
+Subtotal: 320.00 TL
+Delivery fee: 25.00 TL
+Total: 345.00 TL
+
+1. Add an item to the cart
+0. Back
+
+Your choice: 1
+Enter 0 to cancel.
+Item ID: R01-05
+Quantity: 2
+Added to the cart.
+Restaurant: Kebapçı Mehmet
+  R01-02   1 x Adana Kebap @ 320.00 TL = 320.00 TL
+  R01-05   2 x Ayran @ 40.00 TL = 80.00 TL
+Subtotal: 400.00 TL
+Delivery fee: 25.00 TL
+Total: 425.00 TL
+
+1. Add an item to the cart
+0. Back
+
+Your choice: 1
+Enter 0 to cancel.
+Item ID: R01-02
+Quantity: 1
+Added to the cart.
+Restaurant: Kebapçı Mehmet
+  R01-02   2 x Adana Kebap @ 320.00 TL = 640.00 TL
+  R01-05   2 x Ayran @ 40.00 TL = 80.00 TL
+Subtotal: 720.00 TL
+Delivery fee: 25.00 TL
+Total: 745.00 TL
+
+1. Add an item to the cart
+0. Back
+
+Your choice: 1
+Enter 0 to cancel.
+Item ID: R01-07
+Quantity: 1
+Added to the cart.
+Restaurant: Kebapçı Mehmet
+  R01-02   2 x Adana Kebap @ 320.00 TL = 640.00 TL
+  R01-05   2 x Ayran @ 40.00 TL = 80.00 TL
+  R01-07   1 x Künefe @ 180.00 TL = 180.00 TL
+Subtotal: 900.00 TL
+Delivery fee: 25.00 TL
+Total: 925.00 TL
+
+1. Add an item to the cart
+0. Back
+
+Your choice: 0
+
+Restaurants
+Cuisine: All | District: All
+ID  | Name           | Cuisine  | District | Delivery fee
+R01 | Kebapçı Mehmet | Turkish  | Kadıköy  |     25.00 TL
+R02 | Pizza Roma     | Italian  | Beşiktaş |     40.00 TL
+R03 | Burger Station | American | Şişli    |     35.00 TL
+R04 | Yeşil Tabak    | Vegan    | Kadıköy  |     30.00 TL
+R05 | Dönerci Usta   | Turkish  | Üsküdar  |     20.00 TL
+R06 | Tatlı Durağı   | Dessert  | Ataşehir |     30.00 TL
+
+1. Filter restaurants
+2. Clear filters
+3. View a menu
+0. Back
+
+Your choice: 3
+Enter 0 to cancel.
+Restaurant ID: R02
+
+Menu - Pizza Roma
+
+Pizza
+  R02-01   Margherita                 320.00 TL
+  R02-02   Quattro Formaggi           390.00 TL
+  R02-03   Pepperoni                  370.00 TL
+
+Salad
+  R02-04   Caesar Salad               210.00 TL
+
+Dessert
+  R02-05   Tiramisu                   190.00 TL
+
+Drink
+  R02-06   Lemonade                    60.00 TL
+
+Delivery fee: 40.00 TL
+
+1. Add an item to the cart
+0. Back
+
+Your choice: 1
+Enter 0 to cancel.
+Item ID: R02-01
+Quantity: 1
+Error: Adding an item from another restaurant is refused. Please empty the cart to continue.
+
+1. Add an item to the cart
+0. Back
+
+Your choice: 0
+
+Restaurants
+Cuisine: All | District: All
+ID  | Name           | Cuisine  | District | Delivery fee
+R01 | Kebapçı Mehmet | Turkish  | Kadıköy  |     25.00 TL
+R02 | Pizza Roma     | Italian  | Beşiktaş |     40.00 TL
+R03 | Burger Station | American | Şişli    |     35.00 TL
+R04 | Yeşil Tabak    | Vegan    | Kadıköy  |     30.00 TL
+R05 | Dönerci Usta   | Turkish  | Üsküdar  |     20.00 TL
+R06 | Tatlı Durağı   | Dessert  | Ataşehir |     30.00 TL
+
+1. Filter restaurants
+2. Clear filters
+3. View a menu
+0. Back
+
+Your choice: 0
+
+================================
+            FOODFLOW
+Customer: Ayşe Yılmaz
+E-mail: ayse@example.com
+================================
+1. Browse restaurants
+2. Change customer
+3. Place order
+4. View cart
+5. My orders
+0. Exit
+
+Your choice: 4
+
+Cart
+Restaurant: Kebapçı Mehmet
+  R01-02   2 x Adana Kebap @ 320.00 TL = 640.00 TL
+  R01-05   2 x Ayran @ 40.00 TL = 80.00 TL
+  R01-07   1 x Künefe @ 180.00 TL = 180.00 TL
+Subtotal: 900.00 TL
+Delivery fee: 25.00 TL
+Total: 925.00 TL
+
+1. Change a quantity
+2. Remove an item
+3. Empty the cart
+0. Back
+
+Your choice: 1
+Enter 0 to cancel.
+Item ID: R01-05
+New quantity: 25
+Error: Quantity can't be higher than 20!
+
+Cart
+Restaurant: Kebapçı Mehmet
+  R01-02   2 x Adana Kebap @ 320.00 TL = 640.00 TL
+  R01-05   2 x Ayran @ 40.00 TL = 80.00 TL
+  R01-07   1 x Künefe @ 180.00 TL = 180.00 TL
+Subtotal: 900.00 TL
+Delivery fee: 25.00 TL
+Total: 925.00 TL
+
+1. Change a quantity
+2. Remove an item
+3. Empty the cart
+0. Back
+
+Your choice: 1
+Enter 0 to cancel.
+Item ID: R01-05
+New quantity: 3
+The quantity was changed.
+
+Cart
+Restaurant: Kebapçı Mehmet
+  R01-02   2 x Adana Kebap @ 320.00 TL = 640.00 TL
+  R01-05   3 x Ayran @ 40.00 TL = 120.00 TL
+  R01-07   1 x Künefe @ 180.00 TL = 180.00 TL
+Subtotal: 940.00 TL
+Delivery fee: 25.00 TL
+Total: 965.00 TL
+
+1. Change a quantity
+2. Remove an item
+3. Empty the cart
+0. Back
+
+Your choice: 2
+Enter 0 to cancel.
+Item ID: R01-07
+The item was removed from the cart.
+
+Cart
+Restaurant: Kebapçı Mehmet
+  R01-02   2 x Adana Kebap @ 320.00 TL = 640.00 TL
+  R01-05   3 x Ayran @ 40.00 TL = 120.00 TL
+Subtotal: 760.00 TL
+Delivery fee: 25.00 TL
+Total: 785.00 TL
+
+1. Change a quantity
+2. Remove an item
+3. Empty the cart
+0. Back
+
+Your choice: 0
+
+================================
+            FOODFLOW
+Customer: Ayşe Yılmaz
+E-mail: ayse@example.com
+================================
+1. Browse restaurants
+2. Change customer
+3. Place order
+4. View cart
+5. My orders
+0. Exit
+
+Your choice: 3
+
+Place order
+Restaurant: Kebapçı Mehmet
+  2 x Adana Kebap @ 320.00 TL = 640.00 TL
+  3 x Ayran @ 40.00 TL = 120.00 TL
+Subtotal: 760.00 TL
+Delivery fee: 25.00 TL
+Total: 785.00 TL
+Delivery address: Moda Caddesi No: 12, Kadıköy
+Payment method: Cash on delivery
+
+Confirm the order? (y/n): n
+The order was not placed. Your cart is unchanged.
+
+================================
+            FOODFLOW
+Customer: Ayşe Yılmaz
+E-mail: ayse@example.com
+================================
+1. Browse restaurants
+2. Change customer
+3. Place order
+4. View cart
+5. My orders
+0. Exit
+
+Your choice: 3
+
+Place order
+Restaurant: Kebapçı Mehmet
+  2 x Adana Kebap @ 320.00 TL = 640.00 TL
+  3 x Ayran @ 40.00 TL = 120.00 TL
+Subtotal: 760.00 TL
+Delivery fee: 25.00 TL
+Total: 785.00 TL
+Delivery address: Moda Caddesi No: 12, Kadıköy
+Payment method: Cash on delivery
+
+Confirm the order? (y/n): y
+
+================================
+            RECEIPT
+================================
+Order number: 1
+Status: PLACED
+Restaurant: Kebapçı Mehmet
+  2 x Adana Kebap @ 320.00 TL = 640.00 TL
+  3 x Ayran @ 40.00 TL = 120.00 TL
+Subtotal: 760.00 TL
+Delivery fee: 25.00 TL
+Total: 785.00 TL
+Delivery address: Moda Caddesi No: 12, Kadıköy
+Payment method: Cash on delivery
+================================
+
+================================
+            FOODFLOW
+Customer: Ayşe Yılmaz
+E-mail: ayse@example.com
+================================
+1. Browse restaurants
+2. Change customer
+3. Place order
+4. View cart
+5. My orders
+0. Exit
+
+Your choice: 5
+
+My orders
+
+Order #1 - Kebapçı Mehmet - PLACED
+  2 x Adana Kebap @ 320.00 TL = 640.00 TL
+  3 x Ayran @ 40.00 TL = 120.00 TL
+Total: 785.00 TL
+
+================================
+            FOODFLOW
+Customer: Ayşe Yılmaz
+E-mail: ayse@example.com
+================================
+1. Browse restaurants
+2. Change customer
+3. Place order
+4. View cart
+5. My orders
+0. Exit
+
+Your choice: 4
+
+Cart
+Your cart is empty.
+
+================================
+            FOODFLOW
+Customer: Ayşe Yılmaz
+E-mail: ayse@example.com
+================================
+1. Browse restaurants
+2. Change customer
+3. Place order
+4. View cart
+5. My orders
+0. Exit
+
+Your choice: 2
+
+================================
+            FOODFLOW
+================================
+1. Register a new customer
+2. Continue with an existing e-mail
+0. Exit
+
+Your choice: 2
+
+Continue with an existing e-mail
+Enter 0 to go back.
+E-mail: nobody@example.com
+Error: Customer with e-mail 'nobody@example.com' not found.
+
+================================
+            FOODFLOW
+================================
+1. Register a new customer
+2. Continue with an existing e-mail
+0. Exit
+
+Your choice: 2
+
+Continue with an existing e-mail
+Enter 0 to go back.
+E-mail: AYSE@example.com
+
+================================
+            FOODFLOW
+Customer: Ayşe Yılmaz
+E-mail: ayse@example.com
+================================
+1. Browse restaurants
+2. Change customer
+3. Place order
+4. View cart
+5. My orders
+0. Exit
+
+Your choice: 0
+
+Goodbye.
