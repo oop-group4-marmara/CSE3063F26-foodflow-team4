@@ -3,8 +3,9 @@
 Record every use of an AI assistant (ChatGPT, Claude, Copilot, …) for this iteration.
 Undisclosed use is treated as an academic-integrity violation (see the syllabus).
 
-| Date        | Member   | Tool   | What we asked / used it for                                | What we accepted, changed or rejected — and why |
-|-------------|----------|--------|------------------------------------------------------------|-------------------------------------------------|
-| 04.11.2026  | Cihangir | Codex  | Correct a connection mistake made in the PlantUML schema.  | Accepted the change                             |
-| 05.11.2026  | İbrahim  | Claude | Used claude to create some of the text of iteration report | Accepted                                        |
-| 05.11.2026  |Ali Eren  | Claude | Used claude to create the supplementary-spec.md file and modified it a little bit| Accepted                                        |
+| Date       | Member   | Tool   | What we asked / used it for                                | What we accepted, changed or rejected — and why |
+|------------|----------|--------|------------------------------------------------------------|-------------------------------------------------|
+| 04.11.2026 | Cihangir | Codex  | Correct a connection mistake made in the PlantUML schema.  | Accepted the change                             |
+| 05.11.2026 | İbrahim  | Claude | Used claude to create some of the text of iteration report | In progress                                     |
+| 05.11.2026 | Cihangir | Codex  | Plan the customer registration/sign-in console flow | kept repository access in App and services, outside the UI. Dictate architectural boundaries. |
+| 05.11.2026  |Ali Eren  | Claude | Used claude to create the supplementary-spec.md file and modified it a little bit| Accepted                

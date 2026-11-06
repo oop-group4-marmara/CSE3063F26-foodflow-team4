@@ -5,15 +5,26 @@ import java.util.Objects;
 public class MenuItem
 {
 
+    private final String id;
     private String name;
     private String category;
     private double price;
 
-    public MenuItem(String name, String category, double price) throws Exception
+    public MenuItem(String id, String name, String category, double price) throws Exception
     {
+        this.id = Objects.requireNonNull(id, "id");
+        if (id.isBlank())
+        {
+            throw new IllegalArgumentException("id must not be blank.");
+        }
         setName(name);
         setCategory(category);
         setPrice(price);
+    }
+
+    public String getId()
+    {
+        return id;
     }
 
     public String getName()
