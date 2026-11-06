@@ -173,4 +173,33 @@ class OrderServiceTest
         assertEquals("Adana Kebap", order.getLines().get(0).getItemName());
         assertEquals(466.5, order.getTotal(), 1e-9);
     }
+
+    @Test
+    @DisplayName("My orders: lists only the customer's own orders, oldest first")
+    void listsOnlyTheCustomersOwnOrders() throws Exception
+    {
+        assertTrue(service.getCustomerOrders(EMAIL).isEmpty());
+
+        fillCart();
+        long first = service.placeOrder(EMAIL).getOrderNumber();
+        fillCart();
+        long second = service.placeOrder(EMAIL).getOrderNumber();
+
+        Customer bob = customers.saveCustomer(new Customer("Bob", "bob@example.com", new Address("Beşiktaş", "Barbaros")));
+        bob.getCart().setRestaurant(restaurant);
+        bob.getCart().setLines(new ArrayList<>(List.of(new CartLine(ayran, 1))));
+        service.placeOrder("bob@example.com");
+
+        List<OrderDto> orders = service.getCustomerOrders(EMAIL.toUpperCase());
+        assertEquals(List.of(first, second), orders.stream().map(OrderDto::getOrderNumber).toList());
+        assertEquals("Kebapçı Mehmet", orders.get(0).getRestaurantName());
+    }
+
+    @Test
+    @DisplayName("My orders: an unknown customer is refused")
+    void unknownCustomerCannotListOrders()
+    {
+        assertThrows(IllegalArgumentException.class, () -> service.getCustomerOrders("nobody@example.com"));
+        assertThrows(IllegalArgumentException.class, () -> service.getCustomerOrders(" "));
+    }
 }
