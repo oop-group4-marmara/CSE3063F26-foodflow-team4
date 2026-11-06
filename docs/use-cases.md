@@ -1,6 +1,8 @@
 # Use-case model
 
-Diagram: `diagrams/use-cases.puml` (export to PNG for the report).
+Diagram: `diagrams/use-cases.puml`.
+
+Operation contracts: `contracts.md`.
 
 ## Brief use cases
 **UC1 Identify the Customer** — *The Customer wants to save their information so that orders reach them correctly. So the Customer registers with name, e-mail and address, and the system keeps it and makes them the current Customer. Next time the e-mail alone is enough.*
