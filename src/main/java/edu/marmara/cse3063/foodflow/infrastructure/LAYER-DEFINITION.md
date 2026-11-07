@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Handles the application's data operations. Repository interfaces and their implementations are located in this layer.
+Handles the application's data operations. It implements the repository interfaces defined in `application.repositories`.
 
 ## Responsibilities
 
@@ -16,6 +16,6 @@ The JSON file is not read again during restaurant queries. Customer data stored 
 
 ## Dependency Rules
 
-- Depends on the Domain layer.
+- Depends on the Domain layer and on the repository contracts in `application.repositories`.
 - May use libraries required for technical operations such as JSON processing and file access.
 - Loads and stores data as Domain entities.

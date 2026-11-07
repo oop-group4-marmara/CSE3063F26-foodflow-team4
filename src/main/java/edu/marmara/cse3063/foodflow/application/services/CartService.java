@@ -8,8 +8,8 @@ import edu.marmara.cse3063.foodflow.domain.models.CartLine;
 import edu.marmara.cse3063.foodflow.domain.models.Customer;
 import edu.marmara.cse3063.foodflow.domain.models.MenuItem;
 import edu.marmara.cse3063.foodflow.domain.models.Restaurant;
-import edu.marmara.cse3063.foodflow.infrastructure.interfaces.ICustomerRepository;
-import edu.marmara.cse3063.foodflow.infrastructure.interfaces.IRestaurantRepository;
+import edu.marmara.cse3063.foodflow.application.repositories.ICustomerRepository;
+import edu.marmara.cse3063.foodflow.application.repositories.IRestaurantRepository;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -58,13 +58,13 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public CartDto addItem(String itemId, String restaurantId, Cart cart, int quantity) throws Exception {
+    public CartDto addItem(String itemId, String restaurantId, Cart cart, int quantity) {
         if (cart == null) throw new IllegalArgumentException("Cart can't be null!");
         if (itemId == null || itemId.isBlank()) throw new IllegalArgumentException("Item Id can't be null!");
         if (restaurantId == null || restaurantId.isBlank()) throw new IllegalArgumentException("Restaurant Id can't be null!");
 
         Restaurant restaurant = restaurantRepository.getRestaurantById(restaurantId);
-        if (restaurant == null) throw new Exception("Restaurant doesn't exist!");
+        if (restaurant == null) throw new IllegalArgumentException("Restaurant doesn't exist!");
 
 
         //checks if the given itemId is served by the restaurant
@@ -75,13 +75,13 @@ public class CartService implements ICartService {
                 break;
             }
         }
-        if (item == null) throw new Exception("Menu Item not found!");
+        if (item == null) throw new IllegalArgumentException("Menu Item not found!");
 
 
         if (quantity < 1 || quantity > 20) throw new IllegalArgumentException("Quantity must be between 1 and 20.");
 
         if (cart.getLines().isEmpty()) cart.setRestaurant(restaurant);
-        if (!cart.getRestaurant().getId().equals(restaurant.getId())) throw new Exception("Adding an item from another restaurant is refused. Please empty the cart to continue.");
+        if (!cart.getRestaurant().getId().equals(restaurant.getId())) throw new IllegalStateException("Adding an item from another restaurant is refused. Please empty the cart to continue.");
 
         //the addItem function
         CartLine line = findLine(cart, itemId);
@@ -89,7 +89,7 @@ public class CartService implements ICartService {
             int currentQuantity = line.getQuantity();
             int newQuantity = currentQuantity + quantity;
 
-            if (newQuantity > 20) throw new Exception("Cannot add item. Total quantity would exceed the maximum limit of 20.");
+            if (newQuantity > 20) throw new IllegalArgumentException("Cannot add item. Total quantity would exceed the maximum limit of 20.");
             line.setQuantity(newQuantity);
         }
 
@@ -103,7 +103,7 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public CartDto changeQuantity(String itemId, Cart cart, int newQuantity) throws Exception {
+    public CartDto changeQuantity(String itemId, Cart cart, int newQuantity) {
         if (cart == null) throw new IllegalArgumentException("Cart can't be null!");
         if (itemId == null || itemId.isBlank()) throw new IllegalArgumentException("Item Id can't be null!");
 
@@ -112,7 +112,7 @@ public class CartService implements ICartService {
 
 
         CartLine line = findLine(cart, itemId);
-        if (line == null) throw new Exception("Item not found in cart!");
+        if (line == null) throw new IllegalArgumentException("Item not found in cart!");
 
         if (newQuantity == 0) deleteLine(cart, line);
         else line.setQuantity(newQuantity);
@@ -121,12 +121,12 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public CartDto removeItem(String itemId, Cart cart) throws Exception {
+    public CartDto removeItem(String itemId, Cart cart) {
         if (cart == null) throw new IllegalArgumentException("Cart can't be null!");
         if (itemId == null || itemId.isBlank()) throw new IllegalArgumentException("Item Id can't be null!");
 
         CartLine line = findLine(cart, itemId);
-        if (line == null) throw new Exception("Item not found in cart!");
+        if (line == null) throw new IllegalArgumentException("Item not found in cart!");
 
         int currentQuantity = line.getQuantity();
         if (currentQuantity <= 1) {
@@ -139,10 +139,10 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public CartDto viewCart(Cart cart) throws Exception {
+    public CartDto viewCart(Cart cart) {
         if (cart == null) throw new IllegalArgumentException("Cart can't be null!");
 
-        if (cart.getLines().isEmpty()) throw new Exception("The cart is empty.");
+        if (cart.getLines().isEmpty()) throw new IllegalStateException("The cart is empty.");
 
         return toDto(cart);
     }
@@ -150,25 +150,13 @@ public class CartService implements ICartService {
     @Override
     public CartDto addToCart(String customerEmail, String restaurantId, String itemId, int quantity) {
         Cart cart = findCart(customerEmail);
-        try {
-            return addItem(strip(itemId), strip(restaurantId), cart, quantity);
-        } catch (RuntimeException exception) {
-            throw exception;
-        } catch (Exception exception) {
-            throw new IllegalStateException(exception.getMessage(), exception);
-        }
+        return addItem(strip(itemId), strip(restaurantId), cart, quantity);
     }
 
     @Override
     public CartDto changeCartQuantity(String customerEmail, String itemId, int newQuantity) {
         Cart cart = findCart(customerEmail);
-        try {
-            return changeQuantity(strip(itemId), cart, newQuantity);
-        } catch (RuntimeException exception) {
-            throw exception;
-        } catch (Exception exception) {
-            throw new IllegalStateException(exception.getMessage(), exception);
-        }
+        return changeQuantity(strip(itemId), cart, newQuantity);
     }
 
     @Override

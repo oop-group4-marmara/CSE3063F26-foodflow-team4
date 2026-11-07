@@ -5,7 +5,7 @@ import edu.marmara.cse3063.foodflow.application.dtos.RegisterCustomerDto;
 import edu.marmara.cse3063.foodflow.application.interfaces.ICustomerService;
 import edu.marmara.cse3063.foodflow.domain.models.Address;
 import edu.marmara.cse3063.foodflow.domain.models.Customer;
-import edu.marmara.cse3063.foodflow.infrastructure.interfaces.ICustomerRepository;
+import edu.marmara.cse3063.foodflow.application.repositories.ICustomerRepository;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -115,14 +115,7 @@ public class CustomerService implements ICustomerService
 
     private static Customer createCustomer(String name, String email, Address address)
     {
-        try {
-            return new Customer(name, email, address);
-        } catch (RuntimeException exception) {
-            throw exception;
-        } catch (Exception exception) {
-            // Customer currently reports its e-mail rule with a checked exception.
-            throw new IllegalArgumentException(exception.getMessage(), exception);
-        }
+        return new Customer(name, email, address);
     }
 
     private static CustomerDto toDto(Customer customer)

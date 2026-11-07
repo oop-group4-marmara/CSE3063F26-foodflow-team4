@@ -10,7 +10,7 @@ public class MenuItem
     private String category;
     private double price;
 
-    public MenuItem(String id, String name, String category, double price) throws Exception
+    public MenuItem(String id, String name, String category, double price)
     {
         this.id = Objects.requireNonNull(id, "id");
         if (id.isBlank())
@@ -52,11 +52,11 @@ public class MenuItem
         return price;
     }
 
-    public final void setPrice(double price) throws Exception
+    public final void setPrice(double price)
     {
         if (price <= 0.0)
         {
-            throw new Exception("Price must be positive");
+            throw new IllegalArgumentException("Price must be positive");
         }
         this.price = price;
     }

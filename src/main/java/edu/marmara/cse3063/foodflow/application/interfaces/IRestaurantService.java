@@ -13,7 +13,7 @@ public interface IRestaurantService
     /** Filters the full catalog by optional, case-insensitive cuisine and district substrings. */
     ArrayList<RestaurantDto> filterRestaurants(String cuisine, String district);
 
-    RestaurantDto getRestaurantById(String id) throws Exception;
+    RestaurantDto getRestaurantById(String id);
 
     /** UC4 View Menu: the restaurant's items grouped by category, plus its delivery fee. */
     MenuDto viewMenu(String restaurantId);
