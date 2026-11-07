@@ -10,12 +10,12 @@ public class OrderLine
     private final int quantity;
     private final double lineTotal;
 
-    public OrderLine(String itemName, double unitPrice, int quantity) throws Exception
+    public OrderLine(String itemName, double unitPrice, int quantity)
     {
         this.itemName = Objects.requireNonNull(itemName, "itemName");
         if (unitPrice <= 0.0 || quantity < 1)
         {
-            throw new Exception("Unit price and quantity must be positive.");
+            throw new IllegalArgumentException("Unit price and quantity must be positive.");
         }
         this.unitPrice = unitPrice;
         this.quantity = quantity;

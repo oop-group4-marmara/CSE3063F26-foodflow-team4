@@ -114,16 +114,7 @@ public class RestaurantRepository implements IRestaurantRepository
 
     private static MenuItem createMenuItem(String id, String name, String category, double price)
     {
-        try
-        {
-            return new MenuItem(id, name, category, price);
-        }
-        catch (Exception exception)
-        {
-            // MenuItem currently reports state violations through a checked Exception.
-            throw new IllegalArgumentException("Invalid menu item '" + name + "': " + exception.getMessage(),
-                    exception);
-        }
+        return new MenuItem(id, name, category, price);
     }
 
     private static JsonObject requireObject(JsonElement value, String fieldName)

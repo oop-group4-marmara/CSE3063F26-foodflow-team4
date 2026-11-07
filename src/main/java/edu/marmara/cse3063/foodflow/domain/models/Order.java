@@ -16,16 +16,16 @@ public class Order
     private final double subtotal;
     private final double total;
 
-    public Order(long orderNumber, Customer customer, Restaurant restaurant, Address deliveryAddress, ArrayList<OrderLine> lines) throws Exception
+    public Order(long orderNumber, Customer customer, Restaurant restaurant, Address deliveryAddress, ArrayList<OrderLine> lines)
     {
         this.orderNumber = orderNumber;
         this.customer = Objects.requireNonNull(customer, "customer");
         this.restaurant = Objects.requireNonNull(restaurant, "restaurant");
         this.deliveryAddress = Objects.requireNonNull(deliveryAddress, "deliveryAddress");
-        this.lines = new ArrayList<>(lines);
+        this.lines = new ArrayList<>(Objects.requireNonNull(lines, "lines"));
         if (this.lines.isEmpty())
         {
-            throw new Exception("An order must contain at least one order line.");
+            throw new IllegalStateException("An order must contain at least one order line.");
         }
 
         this.deliveryFee = restaurant.getDeliveryFee();

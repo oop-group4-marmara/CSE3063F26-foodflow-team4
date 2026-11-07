@@ -55,21 +55,8 @@ public class OrderService implements IOrderService
         // Lines are copied before a number is issued so that a BR-1 violation does not consume a number.
         ArrayList<OrderLine> lines = snapshotLines(cart);
 
-        Order order;
-        try
-        {
-            order = new Order(orderRepository.nextOrderNumber(), customer, cart.getRestaurant(),
-                    customer.getAddress(), lines);
-        }
-        catch (RuntimeException exception)
-        {
-            throw exception;
-        }
-        catch (Exception exception)
-        {
-            // Order currently reports its rules with a checked exception.
-            throw new IllegalStateException(exception.getMessage(), exception);
-        }
+        Order order = new Order(orderRepository.nextOrderNumber(), customer, cart.getRestaurant(),
+                customer.getAddress(), lines);
         order.setStatus(OrderStatus.PLACED);
         orderRepository.saveOrder(order);
 
@@ -121,16 +108,8 @@ public class OrderService implements IOrderService
         ArrayList<OrderLine> lines = new ArrayList<>();
         for (CartLine cartLine : cart.getLines())
         {
-            try
-            {
-                lines.add(new OrderLine(cartLine.getMenuItem().getName(), cartLine.getMenuItem().getPrice(),
-                        cartLine.getQuantity()));
-            }
-            catch (Exception exception)
-            {
-                // OrderLine currently reports BR-1 violations with a checked exception.
-                throw new IllegalStateException("Cannot place the order: " + exception.getMessage(), exception);
-            }
+            lines.add(new OrderLine(cartLine.getMenuItem().getName(), cartLine.getMenuItem().getPrice(),
+                    cartLine.getQuantity()));
         }
         return lines;
     }
