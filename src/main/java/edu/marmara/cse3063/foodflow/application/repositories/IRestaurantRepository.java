@@ -1,4 +1,4 @@
-package edu.marmara.cse3063.foodflow.infrastructure.interfaces;
+package edu.marmara.cse3063.foodflow.application.repositories;
 
 import edu.marmara.cse3063.foodflow.domain.models.Restaurant;
 

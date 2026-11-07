@@ -5,7 +5,7 @@ import edu.marmara.cse3063.foodflow.application.dtos.RegisterCustomerDto;
 import edu.marmara.cse3063.foodflow.application.interfaces.ICustomerService;
 import edu.marmara.cse3063.foodflow.domain.models.Address;
 import edu.marmara.cse3063.foodflow.domain.models.Customer;
-import edu.marmara.cse3063.foodflow.infrastructure.interfaces.ICustomerRepository;
+import edu.marmara.cse3063.foodflow.application.repositories.ICustomerRepository;
 
 import java.util.Locale;
 import java.util.Objects;

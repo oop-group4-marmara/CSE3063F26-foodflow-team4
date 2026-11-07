@@ -12,8 +12,8 @@ import edu.marmara.cse3063.foodflow.domain.models.Order;
 import edu.marmara.cse3063.foodflow.domain.models.OrderLine;
 import edu.marmara.cse3063.foodflow.domain.models.OrderStatus;
 import edu.marmara.cse3063.foodflow.domain.models.PaymentMethod;
-import edu.marmara.cse3063.foodflow.infrastructure.interfaces.ICustomerRepository;
-import edu.marmara.cse3063.foodflow.infrastructure.interfaces.IOrderRepository;
+import edu.marmara.cse3063.foodflow.application.repositories.ICustomerRepository;
+import edu.marmara.cse3063.foodflow.application.repositories.IOrderRepository;
 
 import java.util.ArrayList;
 import java.util.List;

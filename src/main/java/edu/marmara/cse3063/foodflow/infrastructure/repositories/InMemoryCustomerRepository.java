@@ -1,6 +1,6 @@
 package edu.marmara.cse3063.foodflow.infrastructure.repositories;
 import edu.marmara.cse3063.foodflow.domain.models.Customer;
-import edu.marmara.cse3063.foodflow.infrastructure.interfaces.ICustomerRepository;
+import edu.marmara.cse3063.foodflow.application.repositories.ICustomerRepository;
 
 import java.util.Optional;
 import java.util.Map;

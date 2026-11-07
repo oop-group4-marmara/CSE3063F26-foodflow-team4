@@ -9,16 +9,16 @@ Defines the application's business workflows and services. It processes requests
 - Implement use cases through service methods.
 - Validate input data and conditions related to operations.
 - Apply business rules by working with Domain objects.
-- Use repository interfaces defined in Infrastructure for data access.
+- Define the repository interfaces (`application.repositories`) used for data access.
 - Convert input DTOs into Domain objects and resulting entities into output DTOs.
 
 ## Dependency Rules
 
-- Depends on the Domain and Infrastructure layers.
-- Service dependencies for data access are defined through repository interfaces.
-- Repository implementations are not instantiated inside services; they are provided through constructors.
+- Depends on the Domain layer.
+- Repository interfaces are defined in `application.repositories` and implemented in Infrastructure.
+- Repository implementations are not instantiated inside services; they are injected through constructors.
 
-This project follows a traditional layered architecture. Therefore, the Application layer's knowledge of repository interfaces in Infrastructure and Domain entities is an intentional part of the design.
+This project follows a traditional layered architecture. The Application layer defines the repository contracts it needs, and the Infrastructure layer implements them, so Application does not depend on Infrastructure.
 
 ## DTO Usage
 DTO means Data Transfer Object

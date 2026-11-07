@@ -8,7 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.Strictness;
 import edu.marmara.cse3063.foodflow.domain.models.MenuItem;
 import edu.marmara.cse3063.foodflow.domain.models.Restaurant;
-import edu.marmara.cse3063.foodflow.infrastructure.interfaces.IRestaurantRepository;
+import edu.marmara.cse3063.foodflow.application.repositories.IRestaurantRepository;
 
 import java.io.IOException;
 import java.io.Reader;
