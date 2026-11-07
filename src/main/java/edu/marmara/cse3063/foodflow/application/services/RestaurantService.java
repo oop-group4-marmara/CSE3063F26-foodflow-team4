@@ -6,8 +6,7 @@ import edu.marmara.cse3063.foodflow.application.dtos.RestaurantDto;
 import edu.marmara.cse3063.foodflow.application.interfaces.IRestaurantService;
 import edu.marmara.cse3063.foodflow.domain.models.MenuItem;
 import edu.marmara.cse3063.foodflow.domain.models.Restaurant;
-import edu.marmara.cse3063.foodflow.domain.models.RestaurantFilter;
-import edu.marmara.cse3063.foodflow.infrastructure.interfaces.IRestaurantRepository;
+import edu.marmara.cse3063.foodflow.application.repositories.IRestaurantRepository;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -64,10 +63,10 @@ public class RestaurantService implements IRestaurantService
     }
 
     @Override
-    public RestaurantDto getRestaurantById(String id) throws Exception {
+    public RestaurantDto getRestaurantById(String id) {
         if (id == null || id.isBlank())
         {
-            throw new Exception("Restaurant ID must not be null or blank.");
+            throw new IllegalArgumentException("Restaurant ID must not be null or blank.");
         }
         Restaurant restaurant = restaurantRepository.getRestaurantById(id);
         return restaurant == null ? null : RestaurantDto.fromRestaurant(restaurant);
@@ -96,27 +95,6 @@ public class RestaurantService implements IRestaurantService
                     .add(MenuItemDto.fromMenuItem(menuItem));
         }
         return new MenuDto(restaurant.getId(), restaurant.getName(), restaurant.getDeliveryFee(), itemsByCategory);
-    }
-
-    public List<Restaurant> filter(RestaurantFilter filter)
-    {
-        if(filter.isEmptyFilter()) return restaurantRepository.getAllRestaurants();
-
-        return restaurantRepository.getAllRestaurants().stream()
-                .filter(restaurant -> {return matchesDistrict(restaurant.getDistrict(),filter.getDistrict());})
-                .filter(restaurant->{return matchesCuisine(restaurant.getCuisine(),filter.getCuisine());})
-                .toList();
-    }
-
-    private boolean matchesCuisine(String c1 , String c2)
-    {
-        if(c2==null || c2.isEmpty()) return true;
-        return c1.trim().equalsIgnoreCase(c2.trim());
-    }
-    private boolean matchesDistrict(String d1 , String d2)
-    {
-        if(d2==null || d2.isEmpty())return true;
-        return d1.trim().equalsIgnoreCase(d2.trim());
     }
 
 }

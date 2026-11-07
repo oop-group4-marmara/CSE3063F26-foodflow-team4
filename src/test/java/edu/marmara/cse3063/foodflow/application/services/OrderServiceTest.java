@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -190,7 +191,7 @@ class OrderServiceTest
         bob.getCart().setLines(new ArrayList<>(List.of(new CartLine(ayran, 1))));
         service.placeOrder("bob@example.com");
 
-        List<OrderDto> orders = service.getCustomerOrders(EMAIL.toUpperCase());
+        List<OrderDto> orders = service.getCustomerOrders(EMAIL.toUpperCase(Locale.ROOT));
         assertEquals(List.of(first, second), orders.stream().map(OrderDto::getOrderNumber).toList());
         assertEquals("Kebapçı Mehmet", orders.get(0).getRestaurantName());
     }

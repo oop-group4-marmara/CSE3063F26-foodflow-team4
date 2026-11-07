@@ -9,7 +9,7 @@ public class CartLine
     private final MenuItem menuItem;
     private int quantity;
 
-    public CartLine(MenuItem menuItem, int quantity) throws Exception
+    public CartLine(MenuItem menuItem, int quantity)
     {
         setQuantity(quantity);
         this.menuItem = Objects.requireNonNull(menuItem, "menuItem");
@@ -25,11 +25,11 @@ public class CartLine
         return quantity;
     }
 
-    public final void setQuantity(int quantity) throws Exception
+    public final void setQuantity(int quantity)
     {
         if (quantity < 1 || quantity > MAX_QUANTITY)
         {
-            throw new Exception("Quantity must be between 1 and " + MAX_QUANTITY + ".");
+            throw new IllegalArgumentException("Quantity must be between 1 and " + MAX_QUANTITY + ".");
         }
         this.quantity = quantity;
     }

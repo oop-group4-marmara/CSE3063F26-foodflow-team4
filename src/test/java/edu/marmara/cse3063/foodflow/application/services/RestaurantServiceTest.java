@@ -5,7 +5,7 @@ import edu.marmara.cse3063.foodflow.application.dtos.MenuItemDto;
 import edu.marmara.cse3063.foodflow.application.dtos.RestaurantDto;
 import edu.marmara.cse3063.foodflow.domain.models.MenuItem;
 import edu.marmara.cse3063.foodflow.domain.models.Restaurant;
-import edu.marmara.cse3063.foodflow.infrastructure.interfaces.IRestaurantRepository;
+import edu.marmara.cse3063.foodflow.application.repositories.IRestaurantRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

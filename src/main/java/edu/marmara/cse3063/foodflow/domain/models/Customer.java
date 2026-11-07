@@ -9,14 +9,14 @@ public class Customer
     private Address address;
     private final Cart cart = new Cart();
 
-    public Customer(String name, String email, Address address) throws Exception
+    public Customer(String name, String email, Address address)
     {
         setName(name);
         this.email = Objects.requireNonNull(email, "email");
         setAddress(address);
         if (!email.contains("@"))
         {
-            throw new Exception("Email must contain @.");
+            throw new IllegalArgumentException("Email must contain @.");
         }
     }
 

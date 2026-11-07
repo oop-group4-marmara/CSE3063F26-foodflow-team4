@@ -1,7 +1,7 @@
 package edu.marmara.cse3063.foodflow.infrastructure.repositories;
 
 import edu.marmara.cse3063.foodflow.domain.models.Order;
-import edu.marmara.cse3063.foodflow.infrastructure.interfaces.IOrderRepository;
+import edu.marmara.cse3063.foodflow.application.repositories.IOrderRepository;
 
 import java.util.List;
 import java.util.Map;

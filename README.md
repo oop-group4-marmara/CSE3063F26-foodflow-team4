@@ -50,8 +50,8 @@ Customers remain in memory until exit. Restaurant data is loaded from `data/rest
 FoodFlow follows a traditional layered architecture. All packages live under `edu.marmara.cse3063.foodflow`. Each layer has a `LAYER-DEFINITION.md` file with its rules.
 
 ```
-ui  ──►  application  ──►  infrastructure  ──►  domain
-                 └───────────────────────────────►  domain
+ui  ──►  application  ──►  domain
+infrastructure  ──►  application  ──►  domain
 ```
 
 ### `domain`
