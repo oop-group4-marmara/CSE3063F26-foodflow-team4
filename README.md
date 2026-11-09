@@ -73,7 +73,6 @@ The console user interface.
 - [Supplementary specification](docs/supplementary-spec.md)
 - [Glossary](docs/glossary.md)
 - [Iteration plan](docs/iteration-plan.md)
-- [Console UI implementation and next steps](docs/console-ui-plan.md)
 - [Sample console session](docs/sample-run.txt)
 - [AI usage log](docs/ai-usage-log.md)
 - [UML diagrams](docs/diagrams/)
